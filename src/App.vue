@@ -1,28 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <IndexTop />
+    <IndexCont />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import IndexCont from "./components/IndexCont.vue";
+import IndexTop from "./components/IndexTop.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    IndexCont,
+    IndexTop
+  },
+};
 </script>
 
 <style>
+* {
+  margin: 0;
+  padding: 0;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  flex-direction: column;
+  min-width: 500px;
+}
+#particles-js {
+  width: 100vw !important;
+
+  height: 100%;
+
+  position: absolute;
+}
+
+.particles-js-canvas-el {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>
