@@ -51,11 +51,9 @@
     },
     mounted() {
       pubsub.subscribe("musicurldemo", (msgName, data) => {
-        console.log(msgName, data);
         this.musicurl = data;
       });
       this.musicinfo = pubsub.subscribe("musicinfodemo", (msgName, data) => {
-        console.log(msgName, data);
         this.musicinfo = data;
       });
     },

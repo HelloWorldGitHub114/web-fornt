@@ -76,8 +76,7 @@
     </div>
   </template>
   <script>
-  // 导入axios
-  // import axios from "axios";
+
   export default {
     name: "FindMusic",
     data() {
@@ -103,8 +102,9 @@
         // 最新音乐
         newsmusic: [
           {
-            name:'song_name',
+            name:'song_name111',
             picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
+            id:1,
             song:{
               artists: [{
                 name:"AritistName"
@@ -113,8 +113,9 @@
             }
           },
           {
-            name:'song_name',
+            name:'song_name222',
             picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
+            id:2,
             song:{
               artists: [{
                 name: "AMIER"
@@ -122,8 +123,9 @@
             }
           },
           {
-            name:'song_name',
+            name:'song_name333',
             picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
+            id:3,
             song:{
               artists: [{
                 name: "EGOIST"

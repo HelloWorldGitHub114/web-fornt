@@ -11,9 +11,10 @@
           <li
             v-for="(item, index) in musicQueue"
             :key="index"
-            :class="{ 'active-song': item.id == globalMusicInfo.id }"
-            @dblclick="playMusic(item)"
+            :class="{ 'active-song': item.id == globalMusicInfo.id, 'select': true }"
+            @click="changeNowIndex(index)"
           >
+          <!-- 点击播放列表条目不要直接用play，会触发监听器造成二次切换，直接changeNowIndex，让监听器进行play即可 -->
             <div class="playingIcon" v-show="item.id == globalMusicInfo.id">
               <div class="playingIcon1"></div>
               <div class="playingIcon2"></div>
@@ -41,6 +42,11 @@
       return {};
     },
     methods: {
+      changeNowIndex(index)
+      {
+        console.log("播放列表Index变更:",index);
+        this.$store.commit("changeNowIndex", index);
+      },
       clearMusicQueue() {
         if (this.musicQueue.length == 0) {
           this.$message({
@@ -123,10 +129,12 @@
           params: {
             id,
           },
-        }).then((res) => {
-          console.log(row);
+        }).then(() => {
+        // }).then((res) => {
+          console.log("发布音乐id:",id);
           pubsub.publish("musicinfodemo", row);
-          pubsub.publish("musicurldemo", res.data.data[0].url);
+          //pubsub.publish("musicurldemo", res.data.data[0].url);
+          pubsub.publish("musicurldemo", "https://m10.music.126.net/20240524233309/5a17d45b0a221858fd49c25502b9992a/ymusic/36d1/97a8/a1f5/f4c1fed0a1c534a194f31f15b5da9113.mp3");
         });
         this.$store.commit("changeMusicInfo", row);
         let ids = [];
@@ -141,7 +149,6 @@
         return this.$store.state.musicQueue;
       },
       nowIndex() {
-        console.log("NowIndex:" + this.$store.state.nowIndex);
         return this.$store.state.nowIndex;
       },
       globalMusicInfo() {
@@ -150,7 +157,6 @@
     },
     watch: {
       nowIndex() {
-        console.log(this.nowIndex);
         this.playMusic(this.musicQueue[this.nowIndex]);
       },
     },
@@ -186,6 +192,9 @@
   }
   .active-song {
     background-color: rgb(255, 192, 203);
+  }
+  .select{
+    cursor: pointer;
   }
   .iconfont
   {
@@ -259,7 +268,6 @@
     /* transform: translate3d(0,0,0); */
     animation: playingIcon;
     animation-duration: 0.5s;
-    animation-delay: 0;
     animation-iteration-count: infinite;
     animation-timing-function: ease-out;
     animation-direction: alternate-reverse;

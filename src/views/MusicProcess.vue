@@ -129,7 +129,7 @@
           } else {
             this.$message({
               type: "error",
-              message: "还没有播放音乐哦",
+              message: "没有音乐正在播放",
               showClose: true,
             });
           }
@@ -149,22 +149,29 @@
       formatTooltip(val) {
         return val * 100 + "%";
       },
+      loop(){
+        this.isPaused = false;
+        const audio = this.$refs.audio;
+        if (audio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+        setTimeout(() => {
+          this.isPaused = !this.isPaused;
+          this.$refs.audio.play();
+        }, 100);
+      },
       // 上一曲
       previous() {
         if (this.musicQueue.length == 0) {
           this.$message({
             type: "warning",
-            message: "宝er，列表空空如也~",
+            message: "播放列表为空",
             showClose: true,
           });
         } else {
           if (this.musicQueue.length == 1) {
-            this.currentTime = 0;
-            let musicUrl = this.globalMusicUrl;
-            this.$store.commit("changeMusicUrl", "");
-            setTimeout(() => {
-              this.$store.commit("changeMusicUrl", musicUrl);
-            }, 0);
+            this.loop();
           } else {
             let ids = [];
             for (const item of this.musicQueue) {
@@ -177,6 +184,7 @@
                   this.musicQueue.length
                 : (nowIndex - 1) % this.musicQueue.length;
             this.$store.commit("changeNowIndex", prevIndex);
+            console.log("播放列表Index变更:",prevIndex);
           }
         }
       },
@@ -185,17 +193,12 @@
         if (this.musicQueue.length == 0) {
           this.$message({
             type: "warning",
-            message: "宝er，列表空空如也~",
+            message: "播放列表为空",
             showClose: true,
           });
         } else {
           if (this.musicQueue.length == 1) {
-            this.currentTime = 0;
-            let musicUrl = this.globalMusicUrl;
-            this.$store.commit("changeMusicUrl", "");
-            setTimeout(() => {
-              this.$store.commit("changeMusicUrl", musicUrl);
-            }, 0);
+            this.loop();
           } else {
             let ids = [];
             for (const item of this.musicQueue) {
@@ -204,6 +207,7 @@
             let nowIndex = ids.indexOf(this.globalMusicInfo.id);
             let nextindex = (nowIndex + 1) % this.musicQueue.length;
             this.$store.commit("changeNowIndex", nextindex);
+            console.log("播放列表Index变更:",nextindex);
           }
         }
       },
@@ -216,7 +220,6 @@
         return this.$store.state.musicQueue;
       },
       nowIndex() {
-        console.log("NowIndex" + this.$store.state.nowIndex);
         return this.$store.state.nowIndex;
       },
       globalMusicInfo() {
@@ -239,13 +242,9 @@
       currentTime() {
         if (this.currentTime >= this.duration) {
           if (this.musicQueue.length == 1) {
-            this.currentTime = 0;
-            let musicUrl = this.globalMusicUrl;
-            this.$store.commit("changeMusicUrl", "");
-            setTimeout(() => {
-              this.$store.commit("changeMusicUrl", musicUrl);
-            }, 1);
-          } else {
+            this.loop();
+          } 
+          else {
             let ids = [];
             for (const item of this.musicQueue) {
               ids.push(item.id);
@@ -253,6 +252,7 @@
             let nowIndex = ids.indexOf(this.globalMusicInfo.id);
             let nextindex = (nowIndex + 1) % this.musicQueue.length;
             this.$store.commit("changeNowIndex", nextindex);
+            console.log("播放列表Index变更:",nextindex);
           }
         }
       },
@@ -262,7 +262,6 @@
         } else this.$refs.audio.muted = false;
       },
       musicurl() {
-        console.log(this.musicurl);
         if (this.musicurl) this.isPaused = true;
         else {
           this.isPaused = false;
