@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- finished -->
+<template>
     <div class="discover">
       <!-- 轮播图 -->
       <div class="Carousel">
@@ -75,75 +76,21 @@
       </div>
     </div>
   </template>
-  <script>
 
+  <script>
+  import axios from 'axios';
   export default {
     name: "FindMusic",
     data() {
       return {
         // 轮播图
-        banners: [
-          {
-            imageUrl: 'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg'
-          },
-          {
-            imageUrl: "https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg"
-          }
-        ],
+        banners: [],
         // 推荐歌单
-        musiclists: [
-          {
-            name:'歌单名',
-            picUrl: 'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-            copywriter: '歌单作者',//歌单作者
-            id: 1
-          }
-        ],
+        musiclists: [],
         // 最新音乐
-        newsmusic: [
-          {
-            name:'song_name111',
-            picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-            id:1,
-            song:{
-              artists: [{
-                name:"AritistName"
-              }],
-              duration:19260817
-            }
-          },
-          {
-            name:'song_name222',
-            picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-            id:2,
-            song:{
-              artists: [{
-                name: "AMIER"
-              }]
-            }
-          },
-          {
-            name:'song_name333',
-            picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-            id:3,
-            song:{
-              artists: [{
-                name: "EGOIST"
-              }]
-            }
-          }
-        ],
+        newsmusic: [],
         // 最新mv
-        newsmv: [
-          {
-            id: 1,
-            picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-            playCount: 1,
-            artists: [{
-              name: "EGOIST"
-            }]
-          }
-        ],
+        newsmv: [],
       };
     },
     computed: {
@@ -152,61 +99,58 @@
       },
     },
     created() {
-    //   // 轮播图
-    //   axios({
-    //     url: "#",
-    //     method: "get",
-    //     params: {},
-    //   }).then((res) => {
-    //     this.banners = res.data.banners;
-    //   });
-    //   // 推荐歌单
-    //   axios({
-    //     url: "#",
-    //     method: "get",
-    //     params: {
-    //       // 获取的数据量
-    //       limit: 10,
-    //     },
-    //   }).then((res) => {
-    //     this.musiclists = res.data.result;
-    //   });
-    //   // 最新音乐
-    //   axios({
-    //     url: "#",
-    //     method: "get",
-    //     params: {
-    //       limit: 10,
-    //     },
-    //   }).then((res) => {
-    //     this.newsmusic = res.data.result;
-    //   });
-    //   // 最新MV
-    //   axios({
-    //     url: "#",
-    //     method: "get",
-    //     params: {
-    //       limit: 8,
-    //     },
-    //   }).then((res) => {
-    //     this.newsmv = res.data.result;
-    //   });
+      // 轮播图
+      axios({
+        url: "/banner",
+        method: "get",
+        params: {},
+      }).then((res) => {
+        this.banners = res.data.data.banners;
+      });
+      // 推荐歌单
+      axios({
+        url: "/personalized",
+        method: "get",
+        params: {
+          limit: 10,
+        },
+      }).then((res) => {
+        this.musiclists = res.data.data.results;
+      });
+      // 最新音乐
+      axios({
+        url: "/personalized/newsong",
+        method: "get",
+        params: {
+          limit: 10,
+        },
+      }).then((res) => {
+        this.newsmusic = res.data.data.result;
+      });
+      // 最新MV
+      axios({
+        url: "/personalized/mv",
+        method: "get",
+        params: {
+          limit: 8,
+        },
+      }).then((res) => {
+        this.newsmv = res.data.data.result;
+      });
     },
     methods: {
       // 播放音乐
       playMusic(item) {
-        // axios({
-        //   url: "#",
-        //   method: "get",
-        //   params: {
-        //     id: item.id,
-        //   },
-        // }).then((res) => {
-        //   this.$parent.$data.musicinfo = item;
-        //   this.$parent.$data.musicurl = res.data.data[0].url;
-        // });
-        this.$parent.$data.musicinfo = item;
-        this.$parent.$data.musicurl = "https://m801.music.126.net/20240524190405/b209aa79e30b4f0c7eb10fdc5a5d04fd/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/15263638455/23b5/df93/6edf/4a2879cb7f2b28d803e53f3ace574f03.mp3";
+        axios({
+          url: "/song/url",
+          method: "get",
+          params: {
+            id: item.id,
+          },
+        }).then((res) => {
+          this.$parent.$data.musicinfo = item;
+          this.$parent.$data.musicurl = res.data.data[0].url;
+        });
         let time = item.song.duration;
         let min = parseInt(time / 60000)
           .toString()
@@ -299,8 +243,6 @@
     font-size: 12px;
     padding: 5px;
     box-sizing: border-box;
-    /* border-top-left-radius: 10px;
-        border-top-right-radius: 10px; */
     transform: translateY(-100%);
     transition: 0.5s;
   }

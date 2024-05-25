@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- finished -->
+<template>
     <div class="musicqueue">
       <div class="queue-top">
         <span>播放列表/{{ musicQueue.length }}</span>
@@ -24,7 +25,8 @@
               <span class="musiclist-songname-txt">{{ item.name }}</span>
               <span class="musiclist-artist">{{ item.musicArtist }}</span>
               <span class="musiclist-time">{{ item.duration }}</span>
-              <span class="musiclist-delete" @click="deleteQueue(item.id)">
+              <span class="musiclist-delete" @click.stop="deleteQueue(item.id)">
+                <!-- 使用@click.stop阻止点击删除按钮时触发父级元素的点击事件处理器 -->
                 <span class="iconfont">❌</span>
               </span>
             </div>
@@ -124,17 +126,15 @@
         // 播放音乐
         let id = row.id;
         axios({
-          url: "#",
+          url: "/song/url",
           method: "get",
           params: {
             id,
           },
-        }).then(() => {
-        // }).then((res) => {
+        }).then((res) => {
           console.log("发布音乐id:",id);
           pubsub.publish("musicinfodemo", row);
-          //pubsub.publish("musicurldemo", res.data.data[0].url);
-          pubsub.publish("musicurldemo", "https://m10.music.126.net/20240524233309/5a17d45b0a221858fd49c25502b9992a/ymusic/36d1/97a8/a1f5/f4c1fed0a1c534a194f31f15b5da9113.mp3");
+          pubsub.publish("musicurldemo", res.data.data[0].url);
         });
         this.$store.commit("changeMusicInfo", row);
         let ids = [];

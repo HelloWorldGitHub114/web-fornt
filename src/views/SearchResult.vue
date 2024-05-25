@@ -1,3 +1,4 @@
+<!-- finished -->
 <template>
   <div class="searchresult">
     <div class="result-top-info">
@@ -94,81 +95,14 @@ export default {
       activeName: "first",
       page: 1,
       // 歌曲列表
-      songList: [
-        {
-          name:'song_name111',
-          id:1,
-          picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          artists: [{
-            name:"AritistName"
-           }],
-           album:{name:"albumname"},
-          duration:1
-        },
-        {
-          name:'song_name222',
-          id:2,
-          picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          artists: [{
-            name:"Amier"
-          }],
-          album:{name:"albumname222"},
-          duration:22
-        },
-        {
-          name:'song_name333',
-          id:3,
-          picUrl:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          artists: [{
-            name:"EGOIST"
-          }],
-          album:{name:"albumname333"},
-          duration:33
-        },
-      ],
+      songList: [],
       // 歌单列表
-      playList: [
-        {
-          name:'歌单名',
-          playCount:12000,
-          coverImgUrl: 'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          id: 1
-        },
-        {
-          name:'冬之花',
-          playCount:114514,
-          coverImgUrl: 'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          id: 2
-        },
-        {
-          name:'One Last Kiss',
-          playCount:1919810,
-          coverImgUrl: 'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          id: 3
-        }
-      ],
+      playList: [],
       // MV列表
-      mvList: [
-        {
-          id: 1,
-          cover:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          playCount: 114514,
-          duration:120,
-          name: "Hanabi",
-          artistName:"EGOIST"
-        },
-        {
-          id: 2,
-          cover:'https://imgs.aixifan.com/o_1djh4076t182erq673u1qu77en15.jpg',
-          playCount: 114514,
-          duration: 120,
-          name: "Lonely",
-          artistName:"TYPEMOON"
-        },
-      ],
+      mvList: [],
       total: 0,
       tag: 1,
-      reqmusic: "testKeyWord",
+      reqmusic: "",
     };
   },
   computed: {
@@ -187,15 +121,15 @@ export default {
       }
     },
     playMusic(row) {
-      // axios({
-      //   url: "#",
-      //   method: "get",
-      //   params: {
-      //     id,
-      //   },
-      // }).then((res) => {
-        // this.$parent.$data.musicurl = res.data.data[0].url;
-        this.$parent.$data.musicurl = "https://m10.music.126.net/20240524233309/5a17d45b0a221858fd49c25502b9992a/ymusic/36d1/97a8/a1f5/f4c1fed0a1c534a194f31f15b5da9113.mp3";
+      let id = row.id;
+      axios({
+        url: "/song/url",
+        method: "get",
+        params: {
+          id,
+        },
+      }).then((res) => {
+        this.$parent.$data.musicurl = res.data.data[0].url;
         let musicitem = {
           id: row.id,
           name: row.name,
@@ -210,12 +144,12 @@ export default {
           ids.push(item.id);
         }
         this.$store.commit("changeNowIndex", ids.indexOf(row.id));
-      // });
+      });
     },
     musicLists() {
       // 搜索接口
       axios({
-        url: "#",
+        url: "/search",
         method: "get",
         params: {
           keywords: this.reqmusic,

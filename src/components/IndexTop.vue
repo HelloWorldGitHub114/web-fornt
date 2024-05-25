@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- finished -->
+<template>
     <div id="index-top">
       <span class="title">音乐</span>
       <input
@@ -84,13 +85,7 @@
         // 搜索框内容
         inputValue: "",
         // 热搜榜数据
-        hotData: [
-          {
-            searchWord:"热搜榜-关键词",
-            score:5,
-            content:"热搜榜-内容"
-          }
-        ],
+        hotData: [],
         // 历史记录
         history: [],
         // 是否展示热搜榜
@@ -116,7 +111,7 @@
         this.showHot = true;
         if (this.hotData.length == 0) {
           axios({
-            url: "https://autumnfish.cn/search/hot/detail",
+            url: "/search/hot/detail",
             method: "get",
           }).then((res) => {
             this.hotData = res.data.data;
@@ -210,7 +205,6 @@
   .search-hot {
     width: 400px;
     height: 300px;
-    /* border: 1px solid #333; */
     box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background-color: #fff;
@@ -265,7 +259,6 @@
   
   .hot-icon {
     width: 30px;
-    /* height: 15px; */
     margin-left: 5px;
   }
   .icon-lajitong::before {

@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- finished -->
+<template>
     <div class="musicprocess">
       <audio
         class="music"

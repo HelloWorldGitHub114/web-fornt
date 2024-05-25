@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- finished -->
+<template>
     <div id="index-cont">
       <!-- 导航区域 -->
       <div class="nav">
