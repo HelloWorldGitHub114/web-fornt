@@ -1,21 +1,22 @@
-﻿<template>
+﻿<!-- 当前后端的UserDetail使用id查询的 -->
+<!-- Todo：接口修改 -->
+<template>
   <div class="userdetail">
     <div class="user-wrap">
       <h2>用户详情</h2>
       <div class="user-info">
         <div class="user-info-head">
-          <img class="userpicture" src="http://dummyimage.com/100x100" alt="" />
-          <div class="user-name">name</div>
+          <img class="userpicture" :src="user.avatar" alt="" />
+          <div class="user-name">{{ user.nickname }}</div>
         </div>
         <div class="user-other">
-          <div class="user-time">地 区：陕西省</div>
-          <div class="user-playcount">听歌：count次</div>
+          <div class="user-location">地 区：{{ user.location }}</div>
         </div>
-        <p class="user-desc">个人简介</p>
+        <p class="user-desc">个性签名：{{ user.introduction }}</p>
       </div>
 
       <h2>TA创建的歌单</h2>
-      <div class="tab-content">
+      <div class="list-content">
         <div class="songs-wrap">
           <div class="list">
             <ul>
@@ -43,6 +44,36 @@
         >
         </el-pagination>
       </div>
+
+      <h2>TA收藏的歌单</h2>
+      <div class="list-content">
+        <div class="songs-wrap">
+          <div class="list">
+            <ul>
+              <li
+                class="iconfont icon-play"
+                v-for="(item, index) in listlike"
+                :key="index"
+                @click="playListDetail(item.id)"
+              >
+                <p class="first-p">播放量：{{ item.playCount }}</p>
+                <img :src="item.coverImgUrl" alt="" />
+                <p class="last-p">{{ item.name }}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="page-list">
+        <el-pagination
+          @current-change="handleCurrentChangeLike"
+          :page-size="10"
+          :current-page="pagelike"
+          layout="prev, pager, next"
+          :total="totallike"
+        >
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -53,12 +84,22 @@ export default {
   name: "UserDetail",
   data() {
     return {
-      // 总条数
+      // 创建歌单总条数
       total: 0,
-      // 页码
+      // 创建页码
       page: 1,
-      // 歌单列表
+      // 创建歌单列表
       list: [],
+      totallike: 0,
+      pagelike: 1,
+      listlike: [],
+      user: {
+        avatar: "",
+        username: "",
+        nickname: "",
+        location: "",
+        introduction: "",
+      },
     };
   },
   created() {
@@ -66,33 +107,50 @@ export default {
   },
   methods: {
     listData() {
+      //获取用户对象
+      axios({
+        url: `/user/detail/${this.$route.query.q}`,
+        method: "get",
+      }).then((res) => {
+        this.user = res.data.data;
+      });
+      //获取用户创建的歌单
       axios({
         url: "/top/playlist",
+        // url: `/songList/detail-userId/${this.$route.query.q}`
         method: "get",
         params: {
           limit: 10,
-          // 起始的值：(页码-1)*每页多少条数据
           offset: (this.page - 1) * 10,
-          //   id:this.$route.query.q
         },
       }).then((res) => {
         this.list = res.data.playlists;
         this.total = res.data.total;
       });
+      //获取用户收藏的歌单
+      axios({
+        url: "/top/playlist",
+        // url: `/songList/detail-userId/${this.$route.query.q}`
+        method: "get",
+        params: {
+          limit: 10,
+          offset: (this.pagelike - 1) * 10,
+        },
+      }).then((res) => {
+        this.listlike = res.data.playlists;
+        this.totallike = res.data.total;
+      });
     },
     handleCurrentChange(val) {
-      console.log(`当前页:${val}`);
       this.page = val;
+      this.listData();
+    },
+    handleCurrentChangeLike(val) {
+      this.pagelike = val;
       this.listData();
     },
     playListDetail(id) {
       this.$router.push(`/playlistdetail?q=${id}`);
-    },
-  },
-  watch: {
-    tabActive() {
-      this.listData();
-      this.page = 1;
     },
   },
 };
@@ -137,7 +195,7 @@ ul {
   color: grey;
   margin: 20px 0;
 }
-.user-info .user-time {
+.user-info .user-location {
   margin-right: 20px;
 }
 .user-info .user-desc {
@@ -149,7 +207,7 @@ ul {
   margin: 10px 30px;
   margin-bottom: 150px;
 }
-.tab-content {
+.list-content {
   margin-top: 20px;
 }
 
@@ -177,8 +235,6 @@ ul {
   font-size: 12px;
   padding: 5px;
   box-sizing: border-box;
-  /* border-top-left-radius: 10px;
-      border-top-right-radius: 10px; */
   transform: translateY(-100%);
   transition: 0.5s;
 }
@@ -213,7 +269,6 @@ ul {
 .songs-wrap ul img {
   width: 100%;
   border-radius: 5px;
-  /* opacity: 1; */
 }
 
 .songs-wrap ul .last-p {

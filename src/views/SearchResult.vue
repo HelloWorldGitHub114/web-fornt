@@ -19,17 +19,17 @@
               style="width: 100%"
               @row-dblclick="playMusic"
             >
-              <el-table-column type="index" width="150"></el-table-column>
-              <el-table-column prop="name" label="音乐标题" width="250">
+              <el-table-column type="index" width="100"></el-table-column>
+              <el-table-column prop="name" label="音乐标题" width="200">
                 <template slot-scope="scope">
                   <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="artists[0].name" label="歌手" width="250">
+              <el-table-column prop="artists[0].name" label="歌手" width="200">
               </el-table-column>
               <el-table-column prop="album.name" label="专辑" width="250">
               </el-table-column>
-              <el-table-column prop="duration" label="时长" width="300">
+              <el-table-column prop="duration" label="时长" width="250">
               </el-table-column>
             </el-table>
           </div>
@@ -76,6 +76,30 @@
             </li>
           </ul>
         </el-tab-pane>
+
+        <!-- <el-tab-pane label="歌手" name="fourth">
+          <ul class="mv-list">
+            <li
+              v-for="(item, index) in mvList"
+              :key="index"
+              @click="toMvdetail(item.id)"
+            >
+              <div class="mv-img-wrap">
+                <img :src="item.cover" alt="newMvs" />
+                <p class="iconfont icon-play play"></p>
+                <p class="play-count iconfont icon-play">
+                  {{ item.playCount }}
+                </p>
+                <p class="mv-duration">{{ item.duration }}</p>
+              </div>
+              <div class="mv-info">
+                <p class="title" :title="item.name">{{ item.name }}</p>
+                <p class="author">{{ item.artistName }}</p>
+              </div>
+            </li>
+          </ul>
+        </el-tab-pane> -->
+
       </el-tabs>
       <el-pagination
         class="page-list"
@@ -275,9 +299,15 @@ ul {
 }
 .el-tabs {
   margin: 20px;
+  width: 100%;
 }
 .tab-wrap {
   margin-bottom: 200px;
+  width: 100%;
+}
+.el-tab-pane
+{
+  width:1000px;
 }
 .mvIcon {
   margin-left: 5px;
@@ -288,13 +318,14 @@ ul {
 .songs-wrap .list ul {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 .songs-wrap .list li {
-  width: 18%;
+  width: 15%;
   margin: 10px 0;
+  margin-right: 60px;
   position: relative;
   overflow-y: hidden;
 }
@@ -361,9 +392,9 @@ ul {
 }
 
 .mv-list li {
-  width: 23%;
+  width: 16%;
   margin-bottom: 20px;
-  margin-right: 20px;
+  margin-right: 60px;
 }
 
 .mv-img-wrap {
@@ -372,7 +403,7 @@ ul {
 }
 
 .mv-img-wrap img {
-  width: 100%;
+  width: 165px;
   height: 165px;
   border-radius: 5px;
 }
