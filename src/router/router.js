@@ -18,6 +18,7 @@ import searchresult from '../views/SearchResult.vue'
 import playlistdetail from '../views/PlaylistDetail.vue'
 import mvdetail from '../views/MvDetail.vue'
 import musicdetail from '@/views/MusicDetail.vue';
+import userdetail from '@/views/UserDetail.vue'
 
 // 配置地址和组件对应关系
 const routes = [
@@ -71,6 +72,13 @@ const routes = [
   }, {
     path: "/musicdetail",
     component: musicdetail,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/userdetail",
+    component: userdetail,
     meta: {
       keepAlive: true
     }

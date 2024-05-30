@@ -4,23 +4,57 @@
     <div class="musicright-wrap">
       <h2>预留歌词滚动区域</h2>
 
+      <div class="lyrics-container">
+        <div class="lyrics">
+          <p>第一行歌词</p>
+          <p>第二行歌词</p>
+          <p>第三行歌词</p>
+          <!-- 更多歌词行 -->
+        </div>
+      </div>
+
       <div class="comment-wrap">
+        <div class="comment-container">
+          <h2>评论</h2>
+          <textarea
+            name="comment"
+            id="comment"
+            cols="200"
+            rows="1"
+            placeholder="写下你的评论"
+          ></textarea>
+          <button class="submit-text">发送</button>
+        </div>
         <h3 class="comment-title">评论({{ total }})</h3>
         <ul>
           <li class="item" v-for="(item, index) in Comments" :key="index">
             <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
             <div class="comment-info">
               <div class="comment">
-                <span class="comment-user">{{ item.user.nickname }}:</span>
+                <span
+                  class="comment-user"
+                  @click="userDetail(item.user.nickname)"
+                  >{{ item.user.nickname }}:</span
+                >
                 <span class="comment-content">{{ item.content }}</span>
               </div>
-              <div class="re-comment"  v-for="(reply, Rindex) in item.beReplied" :key="Rindex">
-                <span class="comment-user">{{ reply.user.nickname }}:</span>
-                <span class="comment-content">{{reply.content}}</span>
+              <div
+                class="re-comment"
+                v-for="(reply, Rindex) in item.beReplied"
+                :key="Rindex"
+              >
+                <span
+                  class="comment-user"
+                  @click="userDetail(reply.user.nickname)"
+                  >{{ reply.user.nickname }}:</span
+                >
+                <span class="comment-content">{{ reply.content }}</span>
               </div>
               <div class="comment-bottom">
                 <p class="comment-time">{{ item.time }}</p>
-                <span class="comment-time iconfont icon-dianzan">{{item.likedCount}}</span>
+                <span class="comment-time iconfont icon-dianzan">{{
+                  item.likedCount
+                }}</span>
               </div>
             </div>
           </li>
@@ -52,9 +86,7 @@
         <p class="music-desc">{{ musicinfos.desc }}</p>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -103,6 +135,9 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.topCommpent();
+    },
+    userDetail(username) {
+      this.$router.push(`/userdetail?q=${username}`);
     },
   },
 };
@@ -175,6 +210,67 @@ ul {
   height: 100%;
   outline: none;
   object-fit: fill;
+}
+
+.lyrics-container {
+  position: relative;
+  width: 300px; /* 调整为合适的宽度 */
+  height: 200px; /* 调整为合适的高度 */
+  overflow: hidden; /* 隐藏超出的部分 */
+  background-color: #f8f8f8; /* 背景色可以自定义 */
+  border: 1px solid #ccc; /* 边框可以自定义 */
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.lyrics {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  transition: top 0.5s ease; /* 平滑滚动效果 */
+}
+
+.lyrics p {
+  margin: 10px 0;
+  font-size: 16px; /* 调整字体大小 */
+  text-align: center; /* 居中文本 */
+}
+.comment-container {
+  margin-top: 10px;
+  width: 60%;
+}
+.comment-container h2 {
+  margin-left: 15px;
+}
+.comment-container #comment {
+  margin-top: 20px;
+  font-size: 18px;
+  padding: 10px;
+  border: 1px solid grey;
+  width: 700px;
+  /* height: 50px; */
+  overflow: hidden;
+  resize: none;
+}
+.comment-container #comment::-webkit-input-placeholder {
+  font-size: 14px;
+  color: grey;
+  font-family: sans-serif;
+}
+.submit-text {
+  width: 100px;
+  height: 35px;
+  background-color: palevioletred;
+  border: 1px solid palevioletred;
+  font-size: 18px;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.submit-text:hover {
+  background-color: pink;
+  border: 1px solid pink;
 }
 
 .comment-title {

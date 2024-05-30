@@ -7,7 +7,11 @@
     </div>
     <!-- tab切换 -->
     <div class="tab-wrap">
-      <el-tabs v-model="activeName" @tab-click="handleClick(activeName)" class="eltab">
+      <el-tabs
+        v-model="activeName"
+        @tab-click="handleClick(activeName)"
+        class="eltab"
+      >
         <el-tab-pane label="歌曲" name="first">
           <div class="songs-table">
             <el-table
@@ -106,10 +110,10 @@ export default {
     };
   },
   computed: {
-      musicQueue() {
-        return this.$store.state.musicQueue;
-      },
+    musicQueue() {
+      return this.$store.state.musicQueue;
     },
+  },
   methods: {
     handleClick(name) {
       if (name == "first") {
@@ -179,7 +183,7 @@ export default {
             songsList.push(item);
           }
           this.songList = songsList;
-        } 
+        }
         //歌单搜索
         else if (this.tag == 1000) {
           this.playList = res.data.result.playlists;
@@ -192,7 +196,7 @@ export default {
                 parseInt(this.playList[i].playCount / 10000) + "w";
             }
           }
-        } 
+        }
         //MV搜索
         else if (this.tag == 1004) {
           this.mvList = res.data.result.mvs;

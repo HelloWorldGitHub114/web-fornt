@@ -20,22 +20,48 @@
       </div>
 
       <div class="comment-wrap">
+        <div class="comment-container">
+          <h2>评论</h2>
+          <textarea
+            name="comment"
+            id="comment"
+            cols="200"
+            rows="1"
+            placeholder="写下你的评论"
+          ></textarea>
+          <button class="submit-text">发送</button>
+        </div>
+
         <h3 class="comment-title">评论({{ total }})</h3>
         <ul>
           <li class="item" v-for="(item, index) in Comments" :key="index">
             <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
             <div class="comment-info">
               <div class="comment">
-                <span class="comment-user">{{ item.user.nickname }}:</span>
+                <span
+                  class="comment-user"
+                  @click="userDetail(item.user.nickname)"
+                  >{{ item.user.nickname }}:</span
+                >
                 <span class="comment-content">{{ item.content }}</span>
               </div>
-              <div class="re-comment"  v-for="(reply, Rindex) in item.beReplied" :key="Rindex">
-                <span class="comment-user">{{ reply.user.nickname }}:</span>
-                <span class="comment-content">{{reply.content}}</span>
+              <div
+                class="re-comment"
+                v-for="(reply, Rindex) in item.beReplied"
+                :key="Rindex"
+              >
+                <span
+                  class="comment-user"
+                  @click="userDetail(reply.user.nickname)"
+                  >{{ reply.user.nickname }}:</span
+                >
+                <span class="comment-content">{{ reply.content }}</span>
               </div>
               <div class="comment-bottom">
                 <p class="comment-time">{{ item.time }}</p>
-                <span class="comment-time iconfont icon-dianzan">{{item.likedCount}}</span>
+                <span class="comment-time iconfont icon-dianzan">{{
+                  item.likedCount
+                }}</span>
               </div>
             </div>
           </li>
@@ -141,6 +167,9 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.topCommpent();
+    },
+    userDetail(username) {
+      this.$router.push(`/userdetail?q=${username}`);
     },
   },
 };
@@ -271,6 +300,43 @@ ul {
 .icon-dianzan::before {
   content: "";
   font-size: 10px;
+}
+
+.comment-container {
+  margin-top: 10px;
+  width: 80%;
+}
+.comment-container h2 {
+  margin-left: 15px;
+}
+.comment-container #comment {
+  margin-top: 20px;
+  font-size: 18px;
+  padding: 10px;
+  border: 1px solid grey;
+  width: 900px;
+  /* height: 50px; */
+  overflow: hidden;
+  resize: none;
+}
+.comment-container #comment::-webkit-input-placeholder {
+  font-size: 14px;
+  color: grey;
+  font-family: sans-serif;
+}
+.submit-text {
+  width: 100px;
+  height: 35px;
+  background-color: palevioletred;
+  border: 1px solid palevioletred;
+  font-size: 18px;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.submit-text:hover {
+  background-color: pink;
+  border: 1px solid pink;
 }
 
 .mv-list li {

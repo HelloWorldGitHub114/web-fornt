@@ -1,32 +1,20 @@
-<template>
-  <div class="playlists">
-    <div class="top-card-wrap">
-      <!-- 封面 -->
-      <img :src="topList.coverImgUrl" alt="" class="bg-blur" />
-      <div class="top-card">
-        <div class="img-wrap">
-          <img :src="topList.coverImgUrl" alt="" />
+﻿<template>
+  <div class="userdetail">
+    <div class="user-wrap">
+      <h2>用户详情</h2>
+      <div class="user-info">
+        <div class="user-info-head">
+          <img class="userpicture" src="http://dummyimage.com/100x100" alt="" />
+          <div class="user-name">name</div>
         </div>
-        <div class="card-content">
-          <div class="card-tag">精品歌单</div>
-          <div class="card-title">{{ topList.name }}</div>
-          <div class="card-info">{{ topList.description }}</div>
+        <div class="user-other">
+          <div class="user-time">地 区：陕西省</div>
+          <div class="user-playcount">听歌：count次</div>
         </div>
+        <p class="user-desc">个人简介</p>
       </div>
-    </div>
-    <div class="tab-container">
-      <div class="tab-bar">
-        <ul>
-          <li
-            :class="item == tabActive ? 'tab-item active' : 'tab-item'"
-            v-for="(item, index) in tabItems"
-            :key="index"
-            @click="changeActive(item)"
-          >
-            {{ item }}
-          </li>
-        </ul>
-      </div>
+
+      <h2>TA创建的歌单</h2>
       <div class="tab-content">
         <div class="songs-wrap">
           <div class="list">
@@ -58,76 +46,39 @@
     </div>
   </div>
 </template>
-
+  
 <script>
 import axios from "axios";
-import "../assets/common/tab.css";
 export default {
-  name: "PlayLists",
+  name: "UserDetail",
   data() {
     return {
       // 总条数
       total: 0,
       // 页码
       page: 1,
-      // 顶部的推荐歌单
-      topList: {},
       // 歌单列表
       list: [],
-      tabActive: "全部",
-      tabItems: [
-        "全部",
-        "欧美",
-        "华语",
-        "流行",
-        "说唱",
-        "摇滚",
-        "民谣",
-        "电子",
-        "轻音乐",
-        "影视原声",
-        "ACG",
-        "怀旧",
-      ],
     };
   },
   created() {
-    this.topData();
     this.listData();
   },
   methods: {
-    topData() {
-      axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/top/playlist/highquality",
-        method: "get",
-        params: {
-          limit: 1,
-          // 分类数据
-          cat: this.tabActive,
-        },
-      }).then((res) => {
-        this.topList = res.data.playlists[0];
-      });
-    },
     listData() {
       axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/top/playlist",
+        url: "/top/playlist",
         method: "get",
         params: {
           limit: 10,
           // 起始的值：(页码-1)*每页多少条数据
           offset: (this.page - 1) * 10,
-          // 分类数据
-          cat: this.tabActive,
+          //   id:this.$route.query.q
         },
       }).then((res) => {
-        console.log(res.data.playlists);
         this.list = res.data.playlists;
         this.total = res.data.total;
       });
-    },
-    changeActive(item) {
-      this.tabActive = item;
     },
     handleCurrentChange(val) {
       console.log(`当前页:${val}`);
@@ -138,122 +89,66 @@ export default {
       this.$router.push(`/playlistdetail?q=${id}`);
     },
   },
-
   watch: {
     tabActive() {
-      this.topData();
       this.listData();
-      // 修改页码为1
       this.page = 1;
     },
   },
 };
 </script>
-
+  
 <style scoped>
-@import "../assets/common/tab.css";
 ul {
   list-style: none;
 }
-.playlists {
-  z-index: 12;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 20px;
-}
-.top-card-wrap {
-  height: 250px;
-  padding: 20px;
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-  border-radius: 10px;
-  overflow: hidden;
+.userdetail {
   display: flex;
+  width: 1200px;
+  padding: 20px 0;
+  margin: 35px;
+  box-shadow: 0 0 10px #0003;
+  background-color: #fff;
+}
+.user-info {
+  margin: 20px 0;
   align-items: center;
 }
-
-.bg-blur {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  filter: blur(20px);
-  z-index: 2;
-}
-
-.top-card {
+.user-info-head {
   display: flex;
-  position: absolute;
-  z-index: 3;
+  align-items: center;
+  margin: 20px 0;
 }
-
-.img-wrap {
-  width: 200px;
-  height: 200px;
+.user-info .user-info-head .userpicture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
-
-.img-wrap img {
-  width: 100%;
-  height: 100%;
+.user-info .user-name {
+  font-size: 20px;
+  color: #000;
+  font-weight: 700;
 }
-
-.card-content {
-  flex: 1;
-  padding: 0 20px;
-}
-
-.card-tag {
-  padding: 5px;
-  width: 100px;
-  box-sizing: border-box;
-  border: 1px solid #d87093;
-  color: palevioletred;
-  text-align: center;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.card-title {
-  color: #fff;
-  margin: 10px 0;
-}
-
-.card-info {
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
-  /* color: #888482; */
-  color: #e3e3e3;
-}
-
-/* tab导航 */
-.tab-container {
-  margin-top: 20px;
-  margin-bottom: 200px;
-}
-
-.tab-bar ul {
-  height: 25px;
+.user-info .user-other {
   display: flex;
-  justify-content: flex-end;
-}
-
-.tab-item {
-  margin-left: 20px;
-  cursor: pointer;
-  font-size: 15px;
+  align-items: center;
+  font-size: 14px;
   color: grey;
+  margin: 20px 0;
 }
-
-.active {
-  color: palevioletred;
+.user-info .user-time {
+  margin-right: 20px;
 }
-
+.user-info .user-desc {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.user-wrap {
+  width: 800px;
+  margin: 10px 30px;
+  margin-bottom: 150px;
+}
 .tab-content {
   margin-top: 20px;
 }

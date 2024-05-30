@@ -3,11 +3,21 @@
   <!-- 最新音乐 -->
   <div class="new-songs" :style="backgroundDiv">
     <div class="tab-bar">
-      <span class="item" @click="tag = 0" :class="{ active: tag == 0 }">全部</span>
-      <span class="item" @click="tag = 7" :class="{ active: tag == 7 }">华语</span>
-      <span class="item" @click="tag = 96" :class="{ active: tag == 96 }">欧美</span>
-      <span class="item" @click="tag = 8" :class="{ active: tag == 8 }">日本</span>
-      <span class="item" @click="tag = 16" :class="{ active: tag == 16 }">韩文</span>
+      <span class="item" @click="tag = 0" :class="{ active: tag == 0 }"
+        >全部</span
+      >
+      <span class="item" @click="tag = 7" :class="{ active: tag == 7 }"
+        >华语</span
+      >
+      <span class="item" @click="tag = 96" :class="{ active: tag == 96 }"
+        >欧美</span
+      >
+      <span class="item" @click="tag = 8" :class="{ active: tag == 8 }"
+        >日本</span
+      >
+      <span class="item" @click="tag = 16" :class="{ active: tag == 16 }"
+        >韩文</span
+      >
     </div>
     <div class="songs-table">
       <el-table :data="tableData" style="width: 100%">

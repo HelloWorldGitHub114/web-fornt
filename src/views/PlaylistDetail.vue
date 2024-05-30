@@ -13,7 +13,9 @@
           <div class="user-avatar">
             <img :src="avatarUrl" alt="" />
           </div>
-          <div class="user-name">{{ nickname }}</div>
+          <div class="user-name" @click="userDetail(nickname)">
+            {{ nickname }}
+          </div>
           <div class="create-time">
             <span>{{ playlist.createTime }}</span> 创建
             <span>共{{ allmusic }}首</span>
@@ -82,11 +84,17 @@
                 <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
                 <div class="comment-info">
                   <div class="comment">
-                    <span class="comment-user">{{ item.user.nickname }}:</span>
+                    <span
+                      class="comment-user"
+                      @click="userDetail(item.user.nickname)"
+                      >{{ item.user.nickname }}:</span
+                    >
                     <span class="comment-content">{{ item.content }}</span>
                   </div>
                   <div class="re-comment" v-if="item.beReplied.length != 0">
-                    <span class="comment-user"
+                    <span
+                      class="comment-user"
+                      @click="userDetail(item.beReplied[0].user.nickname)"
                       >{{ item.beReplied[0].user.nickname }}:</span
                     >
                     <span class="comment-content">{{
@@ -165,7 +173,7 @@ export default {
     },
     topComment() {
       axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/playlist",
+        url: "/comment/playlist",
         method: "get",
         params: {
           id: this.$route.query.q,
@@ -226,11 +234,14 @@ export default {
       this.$store.commit("changeNowIndex", 0);
       this.playMusic(allSongs[0]);
     },
+    userDetail(username) {
+      this.$router.push(`/userdetail?q=${username}`);
+    },
   },
   created() {
     //获取歌单详情
     axios({
-      url: "https://mock.apifox.com/m1/4257489-3899055-default/playlist/detail",
+      url: "/playlist/detail",
       method: "get",
       params: { id: this.$route.query.q },
     }).then((res) => {
@@ -255,17 +266,6 @@ export default {
         this.musiclists[i].dt = duration;
       }
     });
-    //获取最热评论
-    // axios({
-    //   url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/hot",
-    //   method: "get",
-    //   params: { id: this.$route.query.q, type: 2 },
-    // }).then((res) => {
-    //   this.hotComments = res.data.hotComments;
-    //   for (let item of res.data.hotComments) {
-    //     item.time = this.formatDateFully(new Date(item.time));
-    //   }
-    // });
     //获取最新评论
     this.topComment();
   },
@@ -358,6 +358,7 @@ ul {
   margin: 0 10px;
   font-size: 18px;
   color: skyblue;
+  cursor: pointer;
 }
 .playAllBtn {
   display: inline-block;
