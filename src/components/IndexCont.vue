@@ -72,11 +72,19 @@
   }
   #index-cont .nav {
     z-index: 100;
-    cursor: pointer;
     width: 200px;
     font-size: 18px;
     color: LightSkyBlue;
     border-right: 1px solid rgba(255, 192, 203, 0.5);
+    position: fixed; /* 固定导航栏 */
+    top: 200;
+    left: 0;
+    width: 200px; /* 根据需要调整导航栏宽度 */
+    height: 100%;
+    background-color: #f8f8f8; /* 可以自定义导航栏背景色 */
+    padding: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
   }
   #index-cont .nav ul {
     list-style: none;
@@ -102,8 +110,10 @@
     fill: DeepSkyBlue;
   }
   #index-cont .main {
-    z-index: 100;
-    flex: 1;
+    margin-left: 200px;
+    padding: 20px;
+    height: 100%;
+    width: calc(100% - 200px);
   }
   .player {
     z-index: 10;

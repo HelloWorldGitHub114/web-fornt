@@ -17,6 +17,8 @@ import newmvs from '../views/NewMvs.vue'
 import searchresult from '../views/SearchResult.vue'
 import playlistdetail from '../views/PlaylistDetail.vue'
 import mvdetail from '../views/MvDetail.vue'
+import musicdetail from '@/views/MusicDetail.vue';
+
 // 配置地址和组件对应关系
 const routes = [
   {
@@ -63,6 +65,12 @@ const routes = [
   }, {
     path: "/mvdetail",
     component: mvdetail,
+    meta: {
+      keepAlive: true
+    }
+  }, {
+    path: "/musicdetail",
+    component: musicdetail,
     meta: {
       keepAlive: true
     }

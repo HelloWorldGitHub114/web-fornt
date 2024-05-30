@@ -1,7 +1,5 @@
 <template>
-  <!-- 歌单详情 -->
-  <div>歌单详情部分PlayListDetail
-    <div class="playlist-detail">
+  <div class="playlist-detail">
     <div class="playlist-topcard">
       <div class="topcard-img">
         <img :src="playlist.coverImgUrl" alt="" />
@@ -73,46 +71,12 @@
               id="comment"
               cols="200"
               rows="1"
-              placeholder="留下你的精彩感悟叭~"
+              placeholder="写下你的评论"
             ></textarea>
             <button class="submit-text">发送</button>
           </div>
           <div class="comment-wrap">
-            <h3 class="comment-title">最热评论({{ hotComments.length }})</h3>
-            <ul>
-              <li
-                v-for="(item, index) in hotComments"
-                :key="index"
-                class="item"
-              >
-                <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
-                <div class="comment-info">
-                  <div class="comment">
-                    <span class="comment-user">{{ item.user.nickname }}:</span>
-                    <span class="comment-content">{{ item.content }}</span>
-                  </div>
-                  <div class="re-comment" v-if="item.beReplied.length != 0">
-                    <span class="comment-user"
-                      >{{ item.beReplied[0].user.nickname }}:</span
-                    >
-                    <span class="comment-content">{{
-                      item.beReplied[0].content
-                    }}</span>
-                  </div>
-                  <div class="comment-bottom">
-                    <p class="comment-time">
-                      {{ item.time }}
-                    </p>
-                    <span class="comment-time iconfont icon-dianzan">{{
-                      item.likedCount
-                    }}</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="comment-wrap">
-            <h3 class="comment-title">最新评论({{ total }})</h3>
+            <h3 class="comment-title">评论({{ total }})</h3>
             <ul>
               <li v-for="(item, index) in topComments" :key="index">
                 <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
@@ -151,7 +115,6 @@
         </el-tab-pane>
       </el-tabs>
     </div>
-  </div>
   </div>
 </template>
 
@@ -201,7 +164,6 @@ export default {
       );
     },
     topComment() {
-      // 最新评论接口地址：https://autumnfish.cn/comment/playlist
       axios({
         url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/playlist",
         method: "get",
@@ -211,7 +173,6 @@ export default {
           offset: (this.page - 1) * 20,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.topComments = res.data.comments;
         this.total = res.data.total;
         for (let item of res.data.topComments) {
@@ -221,14 +182,12 @@ export default {
     },
     // 页码发生了改变
     handleCurrentChange(val) {
-      // console.log(`当前页:${val}`);
       this.page = val;
       // 重新获取数据
       this.topComment();
     },
     playMusic(row) {
       let id = row.id;
-      // console.log(id);
       axios({
         url: "https://autumnfish.cn/song/url",
         method: "get",
@@ -269,7 +228,7 @@ export default {
     },
   },
   created() {
-    // 歌单详情页接口：https://autumnfish.cn/playlist/detail
+    //获取歌单详情
     axios({
       url: "https://mock.apifox.com/m1/4257489-3899055-default/playlist/detail",
       method: "get",
@@ -296,19 +255,18 @@ export default {
         this.musiclists[i].dt = duration;
       }
     });
-    // 最热评论接口地址：https://autumnfish.cn/comment/hot
-    axios({
-      url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/hot",
-      method: "get",
-      params: { id: this.$route.query.q, type: 2 },
-    }).then((res) => {
-      // console.log(res.data);
-      this.hotComments = res.data.hotComments;
-      for (let item of res.data.hotComments) {
-        item.time = this.formatDateFully(new Date(item.time));
-      }
-      // console.log(this.hotComments);
-    });
+    //获取最热评论
+    // axios({
+    //   url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/hot",
+    //   method: "get",
+    //   params: { id: this.$route.query.q, type: 2 },
+    // }).then((res) => {
+    //   this.hotComments = res.data.hotComments;
+    //   for (let item of res.data.hotComments) {
+    //     item.time = this.formatDateFully(new Date(item.time));
+    //   }
+    // });
+    //获取最新评论
     this.topComment();
   },
 };
@@ -482,9 +440,9 @@ ul {
   resize: none;
 }
 .comment-container #comment::-webkit-input-placeholder {
-  font-size: 16px;
+  font-size: 14px;
   color: grey;
-  font-style: italic;
+  font-family: sans-serif;
 }
 .submit-text {
   width: 100px;

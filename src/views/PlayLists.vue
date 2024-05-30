@@ -1,6 +1,4 @@
 <template>
-  <div>推荐歌单部分PlayLists
-      <!-- 推荐歌单 -->
   <div class="playlists">
     <div class="top-card-wrap">
       <!-- 封面 -->
@@ -59,8 +57,6 @@
       </div>
     </div>
   </div>
-  </div>
-  
 </template>
 
 <script>
@@ -110,7 +106,6 @@ export default {
           cat: this.tabActive,
         },
       }).then((res) => {
-        // console.log(res.data.playlists[0]);
         this.topList = res.data.playlists[0];
       });
     },
@@ -137,7 +132,6 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页:${val}`);
       this.page = val;
-      // 重新获取数据
       this.listData();
     },
     playListDetail(id) {
@@ -147,13 +141,10 @@ export default {
 
   watch: {
     tabActive() {
-      // 顶部的精品歌单接口：https://autumnfish.cn/top/playlist/highquality
       this.topData();
-      // 歌单列表接口：https://autumnfish.cn/top/playlist
       this.listData();
       // 修改页码为1
       this.page = 1;
-      console.log(this.page);
     },
   },
 

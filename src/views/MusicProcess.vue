@@ -14,7 +14,7 @@
       <div class="audio-left">
         <!-- 专辑封面 -->
         <div class="bar-albumImg">
-            <img :src="musicimg" alt="" />
+            <img :src="musicimg" alt="" @click="musicDetail(musicinfo.id)"/>
         </div>
         <!-- 模块：上一首，播放，暂停，下一首 -->
         <div class="audio-btns">
@@ -214,6 +214,10 @@
       },
       formatTooltipProgress(value) {
         return this.$options.filters.timeFormat(value);
+      },
+      musicDetail(id)
+      {
+        this.$router.push(`/musicdetail?q=${id}`);
       }
     },
     computed: {
