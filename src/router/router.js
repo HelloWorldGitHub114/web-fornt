@@ -1,6 +1,7 @@
 // 导入
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/index'
 // 使用
 Vue.use(VueRouter)
 
@@ -17,9 +18,13 @@ import newmvs from '../views/NewMvs.vue'
 import searchresult from '../views/SearchResult.vue'
 import playlistdetail from '../views/PlaylistDetail.vue'
 import mvdetail from '../views/MvDetail.vue'
+import login from '../views/Login.vue'
+import register from '../views/Register.vue'
+import { name } from 'pubsub-js';
 // 配置地址和组件对应关系
 const routes = [
   {
+    name:'home',
     // 地址
     path: "/",
     // 组件
@@ -66,10 +71,47 @@ const routes = [
     meta: {
       keepAlive: true
     }
+  },{
+    name:'login',
+    path: "/login",
+    component: login,
+    meta: {
+      keepAlive: true
+    }
+  },{
+    name:'register',
+    path: "/register",
+    component: register,
+    meta: {
+      keepAlive: true
+    }
   },
-]
+  
+];
+
+// if (window.localStorage.getItem('token')) {
+//   store.commit('setIsLogin', window.localStorage.getItem('isLogin'));
+// }
+
+
 // 创建路由
 const router = new VueRouter({
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  if (
+    // 检查用户是否已登录
+    store.state.userid != -1 &&
+    // // ❗️ 避免无限重定向
+    to.name == 'login'
+  ) {
+    next({
+      name:'home'
+    })
+  }else{
+    next()
+  }
+  
 })
 export default router

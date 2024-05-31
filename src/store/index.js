@@ -32,11 +32,20 @@ const mutations = {
       }
     }
   },
+  changeUserid(state,id){
+    state.userid = id;
+  },
+  changeUsername(state,name){
+    state.username = name;
+  }
 }
 const state = {
   musicQueue: [],
   globalMusicInfo: {},
-  nowIndex: 0
+  nowIndex: 0,
+  isLogin:false,
+  userid:-1,
+  username:'',
 }
 export default new Vuex.Store({
   actions, mutations, state,

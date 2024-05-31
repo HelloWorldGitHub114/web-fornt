@@ -102,6 +102,7 @@
     fill: DeepSkyBlue;
   }
   #index-cont .main {
+    margin: 0 auto;
     z-index: 100;
     flex: 1;
   }

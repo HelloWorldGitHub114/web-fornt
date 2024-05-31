@@ -1,5 +1,5 @@
 <template>
-  <div>推荐歌单部分PlayLists
+  <div>
       <!-- 推荐歌单 -->
   <div class="playlists">
     <div class="top-card-wrap">

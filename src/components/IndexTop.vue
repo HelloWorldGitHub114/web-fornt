@@ -2,7 +2,8 @@
 <template>
     <div id="index-top">
       <span class="title">音乐</span>
-      <input
+      <div>
+        <input
         type="text"
         placeholder="搜索歌曲"
         class="index-top-search"
@@ -11,12 +12,17 @@
         @focus="getSearchHot"
         @blur="showHot = false"
       />
+      
+      </div>
+      
+     
       <div
         class="search-hot"
         v-show="showHot"
         ref="hot"
         @mousedown.stop="prevent"
       >
+      
         <el-scrollbar style="height: 100%">
           <div class="history" v-if="history.length">
             <span
@@ -73,6 +79,13 @@
           </ul>
         </el-scrollbar>
       </div>
+      <div style="display: flex;margin-left: auto;" v-if="this.$store.state.userid == -1">
+      <RouterLink to="/login" class="login">登录</RouterLink>
+      <RouterLink to="/register" class="register">注册</RouterLink>
+    </div>
+    <div style="display: flex;margin-left: auto;" v-else>
+      <div class="login">{{this.$store.state.username}}用户，你好</div>
+    </div>
     </div>
   </template>
   
@@ -90,6 +103,7 @@
         history: [],
         // 是否展示热搜榜
         showHot: false,
+        username:'xiaoming'
       };
     },
     methods: {
@@ -140,6 +154,16 @@
         this.$router.go(n);
       },
     },
+    mounted(){
+      
+      if(window.localStorage.getItem('isLogin') === 'true'){
+        // alert(window.localStorage.getItem('user'))
+        let user = JSON.parse(window.localStorage.getItem('user'))
+        this.$store.commit("changeUserid",user.data.id)
+        this.$store.commit("changeUsername",user.data.nickname)
+        
+      }
+    }
   };
   </script>
   <style scoped>

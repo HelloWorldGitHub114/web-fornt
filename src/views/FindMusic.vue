@@ -187,7 +187,9 @@
   @import "../assets/icomoon/style.css";
   .discover {
     z-index: 12;
-    max-width: 1300px;
+    /* max-width: 2300px; */
+    /* width: 1600px; */
+    width: auto;
     margin: 0 auto;
     padding: 20px;
   }
@@ -202,8 +204,8 @@
   }
   
   .Carousel{
-    width: 600px;
-    max-width: 800px;
+    width: 800px;
+    /* max-width: 1600px; */
     margin: 0 auto;
   }
   

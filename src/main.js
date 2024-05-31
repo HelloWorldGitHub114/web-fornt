@@ -7,10 +7,10 @@ import store from './store'
 import VueParticles from 'vue-particles'
 import axios from 'axios';
 
-
+import './api/http.js'
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'https://mock.apifox.com/m1/4257489-3899055-default';
+
 
 Vue.use(VueParticles)
 Vue.use(ElementUI);

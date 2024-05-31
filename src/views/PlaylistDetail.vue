@@ -1,6 +1,6 @@
 <template>
   <!-- 歌单详情 -->
-  <div>歌单详情部分PlayListDetail
+  <div>
     <div class="playlist-detail">
     <div class="playlist-topcard">
       <div class="topcard-img">
