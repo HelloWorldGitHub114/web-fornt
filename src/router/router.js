@@ -18,6 +18,9 @@ import newmvs from '../views/NewMvs.vue'
 import searchresult from '../views/SearchResult.vue'
 import playlistdetail from '../views/PlaylistDetail.vue'
 import mvdetail from '../views/MvDetail.vue'
+import musicdetail from '@/views/MusicDetail.vue';
+import userdetail from '@/views/UserDetail.vue'
+
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
 import { name } from 'pubsub-js';
@@ -68,6 +71,19 @@ const routes = [
   }, {
     path: "/mvdetail",
     component: mvdetail,
+    meta: {
+      keepAlive: true
+    }
+  }, {
+    path: "/musicdetail",
+    component: musicdetail,
+    meta: {
+      keepAlive: true
+    }
+  },
+  {
+    path: "/userdetail",
+    component: userdetail,
     meta: {
       keepAlive: true
     }

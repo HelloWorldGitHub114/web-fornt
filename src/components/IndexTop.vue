@@ -1,93 +1,87 @@
 ﻿<!-- finished -->
 <template>
-    <div id="index-top">
-      <span class="title">音乐</span>
-      <div>
-        <input
-        type="text"
-        placeholder="搜索歌曲"
-        class="index-top-search"
-        v-model="inputValue"
-        @keyup.enter="toSearch()"
-        @focus="getSearchHot"
-        @blur="showHot = false"
-      />
-      
-      </div>
-      
-     
-      <div
-        class="search-hot"
-        v-show="showHot"
-        ref="hot"
-        @mousedown.stop="prevent"
-      >
-      
-        <el-scrollbar style="height: 100%">
-          <div class="history" v-if="history.length">
-            <span
-              class="hot-title"
-              style="display: inline-block; margin-right: 5px"
-              >搜索历史</span
+  <div id="index-top">
+    <router-link to="/findmusic" class="title">XD音乐</router-link>
+    <input
+      type="text"
+      placeholder="搜索歌曲"
+      class="index-top-search"
+      v-model="inputValue"
+      @keyup.enter="toSearch()"
+      @focus="getSearchHot"
+      @blur="showHot = false"
+    />
+    <div
+      class="search-hot"
+      v-show="showHot"
+      ref="hot"
+      @mousedown.stop="prevent"
+    >
+      <el-scrollbar style="height: 100%">
+        <div class="history" v-if="history.length">
+          <span
+            class="hot-title"
+            style="display: inline-block; margin-right: 5px"
+            >搜索历史</span
+          >
+          <span
+            class="iconfont icon-lajitong"
+            style="cursor: pointer"
+            title="清空搜索历史"
+            @mousedown="deleteHistory(0, true)"
+          ></span>
+          <div class="history-wrap">
+            <div
+              class="history-item"
+              v-for="(item, index) in history"
+              :key="index"
+              @mousedown="toHot(item)"
             >
-            <span
-              class="iconfont icon-lajitong"
-              style="cursor: pointer"
-              title="清空搜索历史"
-              @mousedown="deleteHistory(0, true)"
-            ></span>
-            <div class="history-wrap">
-              <div
-                class="history-item"
-                v-for="(item, index) in history"
-                :key="index"
-                @mousedown="toHot(item)"
+              {{ item }}
+              <span
+                class="delete-btn"
+                title="删除"
+                @mousedown.stop="deleteHistory(index, false)"
+                >×</span
               >
-                {{ item }}
-                <span
-                  class="delete-btn"
-                  title="删除"
-                  @mousedown.stop="deleteHistory(index, false)"
-                  >×</span
-                >
-              </div>
             </div>
           </div>
-  
-          <div class="hot-title">热搜榜</div>
-          <ul>
-            <li
-              class="hot-item"
-              v-for="(item, index) in hotData"
-              :key="index"
-              @mousedown.prevent="toHot(item.searchWord)"
-            >
-              <div class="hot-index">{{ index + 1 }}</div>
-              <div class="hot-info">
-                <div class="hot-top">
-                  <div class="hot-name">{{ item.searchWord }}</div>
-                  <div class="hot-score">{{ item.score }}</div>
-                  <img
-                    class="hot-icon"
-                    v-show="item.iconUrl && item.iconType != 5"
-                    :src="item.iconUrl"
-                  />
-                </div>
-                <div class="hot-content">{{ item.content }}</div>
+        </div>
+
+        <!-- <div class="hot-title">热搜榜</div>
+        <ul>
+          <li
+            class="hot-item"
+            v-for="(item, index) in hotData"
+            :key="index"
+            @mousedown.prevent="toHot(item.searchWord)"
+          >
+            <div class="hot-index">{{ index + 1 }}</div>
+            <div class="hot-info">
+              <div class="hot-top">
+                <div class="hot-name">{{ item.searchWord }}</div>
+                <div class="hot-score">{{ item.score }}</div>
+                <img
+                  class="hot-icon"
+                  v-show="item.iconUrl && item.iconType != 5"
+                  :src="item.iconUrl"
+                />
               </div>
-            </li>
-          </ul>
-        </el-scrollbar>
-      </div>
-      <div style="display: flex;margin-left: auto;" v-if="this.$store.state.userid == -1">
+              <div class="hot-content">{{ item.content }}</div>
+            </div>
+          </li>
+        </ul> -->
+      </el-scrollbar>
+    </div>
+    <div style="display: flex;margin-left: auto;" v-if="this.$store.state.userid == -1">
       <RouterLink to="/login" class="login">登录</RouterLink>
       <RouterLink to="/register" class="register">注册</RouterLink>
     </div>
     <div style="display: flex;margin-left: auto;" v-else>
       <div class="login">{{this.$store.state.username}}用户，你好</div>
     </div>
-    </div>
-  </template>
+  </div>
+</template>
   
   <script>
   import axios from "axios";
@@ -103,7 +97,7 @@
         history: [],
         // 是否展示热搜榜
         showHot: false,
-        username:'xiaoming'
+        username:''
       };
     },
     methods: {
@@ -123,14 +117,14 @@
       getSearchHot() {
         // 获取热搜榜数据
         this.showHot = true;
-        if (this.hotData.length == 0) {
-          axios({
-            url: "/search/hot/detail",
-            method: "get",
-          }).then((res) => {
-            this.hotData = res.data.data;
-          });
-        }
+        // if (this.hotData.length == 0) {
+        //   axios({
+        //     url: "/search/hot/detail",
+        //     method: "get",
+        //   }).then((res) => {
+        //     this.hotData = res.data.data;
+        //   });
+        // }
       },
       toHot(value) {
         this.inputValue = value;

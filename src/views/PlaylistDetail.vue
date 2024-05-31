@@ -1,7 +1,5 @@
 <template>
-  <!-- 歌单详情 -->
-  <div>
-    <div class="playlist-detail">
+  <div class="playlist-detail">
     <div class="playlist-topcard">
       <div class="topcard-img">
         <img :src="playlist.coverImgUrl" alt="" />
@@ -15,7 +13,9 @@
           <div class="user-avatar">
             <img :src="avatarUrl" alt="" />
           </div>
-          <div class="user-name">{{ nickname }}</div>
+          <div class="user-name" @click="userDetail(nickname)">
+            {{ nickname }}
+          </div>
           <div class="create-time">
             <span>{{ playlist.createTime }}</span> 创建
             <span>共{{ allmusic }}首</span>
@@ -62,104 +62,23 @@
             <el-table-column prop="dt" label="时长"> </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane
-          :label="`评论(${hotComments.length + total})`"
-          name="second"
-        >
-          <div class="comment-container">
-            <h2>评论</h2>
-            <textarea
-              name="comment"
-              id="comment"
-              cols="200"
-              rows="1"
-              placeholder="留下你的精彩感悟叭~"
-            ></textarea>
-            <button class="submit-text">发送</button>
-          </div>
-          <div class="comment-wrap">
-            <h3 class="comment-title">最热评论({{ hotComments.length }})</h3>
-            <ul>
-              <li
-                v-for="(item, index) in hotComments"
-                :key="index"
-                class="item"
-              >
-                <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
-                <div class="comment-info">
-                  <div class="comment">
-                    <span class="comment-user">{{ item.user.nickname }}:</span>
-                    <span class="comment-content">{{ item.content }}</span>
-                  </div>
-                  <div class="re-comment" v-if="item.beReplied.length != 0">
-                    <span class="comment-user"
-                      >{{ item.beReplied[0].user.nickname }}:</span
-                    >
-                    <span class="comment-content">{{
-                      item.beReplied[0].content
-                    }}</span>
-                  </div>
-                  <div class="comment-bottom">
-                    <p class="comment-time">
-                      {{ item.time }}
-                    </p>
-                    <span class="comment-time iconfont icon-dianzan">{{
-                      item.likedCount
-                    }}</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div class="comment-wrap">
-            <h3 class="comment-title">最新评论({{ total }})</h3>
-            <ul>
-              <li v-for="(item, index) in topComments" :key="index">
-                <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
-                <div class="comment-info">
-                  <div class="comment">
-                    <span class="comment-user">{{ item.user.nickname }}:</span>
-                    <span class="comment-content">{{ item.content }}</span>
-                  </div>
-                  <div class="re-comment" v-if="item.beReplied.length != 0">
-                    <span class="comment-user"
-                      >{{ item.beReplied[0].user.nickname }}:</span
-                    >
-                    <span class="comment-content">{{
-                      item.beReplied[0].content
-                    }}</span>
-                  </div>
-                  <div class="comment-bottom">
-                    <p class="comment-time">{{ item.time }}</p>
-                    <span class="comment-time iconfont icon-dianzan">{{
-                      item.likedCount
-                    }}</span>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <el-pagination
-              class="page-list"
-              @current-change="handleCurrentChange"
-              :page-size="20"
-              :current-page="page"
-              layout="prev, pager, next"
-              :total="total"
-            >
-            </el-pagination>
-          </div>
+        <el-tab-pane label="评论" name="second">
+          <CommentSection type="songList" :id="this.$route.query.q" />
         </el-tab-pane>
       </el-tabs>
     </div>
   </div>
-  </div>
 </template>
 
 <script>
-// import axios from "axios";
 import axios from "axios";
+import CommentSection from "./CommentSection.vue";
+
 export default {
   name: "PlaylistDetail",
+  components: {
+    CommentSection,
+  },
   data() {
     return {
       activeName: "first",
@@ -170,10 +89,6 @@ export default {
       avatarUrl: "",
       nickname: "",
       allmusic: "",
-      hotComments: [],
-      topComments: [],
-      page: 1,
-      total: 1,
     };
   },
   computed: {
@@ -200,50 +115,22 @@ export default {
         year + "-" + month + "-" + date + " " + hour + "-" + min + "-" + second
       );
     },
-    topComment() {
-      // 最新评论接口地址：https://autumnfish.cn/comment/playlist
-      axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/playlist",
-        method: "get",
-        params: {
-          id: this.$route.query.q,
-          limit: 20,
-          offset: (this.page - 1) * 20,
-        },
-      }).then((res) => {
-        // console.log(res.data);
-        this.topComments = res.data.comments;
-        this.total = res.data.total;
-        for (let item of res.data.topComments) {
-          item.time = this.formatDateFully(new Date(item.time));
-        }
-      });
-    },
-    // 页码发生了改变
-    handleCurrentChange(val) {
-      // console.log(`当前页:${val}`);
-      this.page = val;
-      // 重新获取数据
-      this.topComment();
-    },
     playMusic(row) {
       let id = row.id;
-      // console.log(id);
       axios({
-        url: "https://autumnfish.cn/song/url",
+        url: `/song/detail/${id}`,
         method: "get",
-        params: { id },
       }).then((res) => {
+        console.log("音乐地址：",res.data.data.url);
         this.$parent.$data.musicinfo = row;
-        this.$parent.$data.musicurl = res.data.data[0].url;
+        this.$parent.$data.musicurl = res.data.data.url;
       });
       let musicitem = {
         id: row.id,
         name: row.name,
-        musicArtist: row.ar[0].name,
-        duration: row.dt,
+        musicArtist: singerName,
+        duration: row.duration,
       };
-      console.log(musicitem);
       this.$store.commit("changeMusicInfo", musicitem);
       this.$store.commit("changeMusicQueue", musicitem);
       let ids = [];
@@ -258,24 +145,26 @@ export default {
         let musicitem = {
           id: item.id,
           name: item.name,
-          musicArtist: item.ar[0].name,
-          duration: item.dt,
-          picUrl: item.al.picUrl,
+          musicArtist: item.singerName,
+          duration: item.duration,
+          picUrl: item.al.pic,
         };
         this.$store.commit("changeMusicQueue", musicitem);
       }
       this.$store.commit("changeNowIndex", 0);
       this.playMusic(allSongs[0]);
     },
+    userDetail(userid) {
+      this.$router.push(`/userdetail?q=${userid}`);
+    },
   },
   created() {
-    // 歌单详情页接口：https://autumnfish.cn/playlist/detail
+    //获取歌单详情
     axios({
-      url: "https://mock.apifox.com/m1/4257489-3899055-default/playlist/detail",
+      url: "/playlist/detail",
       method: "get",
       params: { id: this.$route.query.q },
     }).then((res) => {
-      // console.log(res.data.playlist);
       this.playlist = res.data.playlist;
       this.avatarUrl = res.data.playlist.creator.avatarUrl;
       this.nickname = res.data.playlist.creator.nickname;
@@ -296,20 +185,6 @@ export default {
         this.musiclists[i].dt = duration;
       }
     });
-    // 最热评论接口地址：https://autumnfish.cn/comment/hot
-    axios({
-      url: "https://mock.apifox.com/m1/4257489-3899055-default/comment/hot",
-      method: "get",
-      params: { id: this.$route.query.q, type: 2 },
-    }).then((res) => {
-      // console.log(res.data);
-      this.hotComments = res.data.hotComments;
-      for (let item of res.data.hotComments) {
-        item.time = this.formatDateFully(new Date(item.time));
-      }
-      // console.log(this.hotComments);
-    });
-    this.topComment();
   },
 };
 </script>
@@ -400,6 +275,7 @@ ul {
   margin: 0 10px;
   font-size: 18px;
   color: skyblue;
+  cursor: pointer;
 }
 .playAllBtn {
   display: inline-block;
@@ -463,101 +339,5 @@ ul {
 }
 .playlist-tabwrap {
   margin: 30px 30px 200px;
-}
-.comment-container {
-  margin-top: 10px;
-  width: 80%;
-}
-.comment-container h2 {
-  margin-left: 15px;
-}
-.comment-container #comment {
-  margin-top: 20px;
-  font-size: 18px;
-  padding: 10px;
-  border: 1px solid grey;
-  width: 900px;
-  /* height: 50px; */
-  overflow: hidden;
-  resize: none;
-}
-.comment-container #comment::-webkit-input-placeholder {
-  font-size: 16px;
-  color: grey;
-  font-style: italic;
-}
-.submit-text {
-  width: 100px;
-  height: 35px;
-  background-color: palevioletred;
-  border: 1px solid palevioletred;
-  font-size: 18px;
-  color: #fff;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-.submit-text:hover {
-  background-color: pink;
-  border: 1px solid pink;
-}
-.comment-title {
-  margin: 30px 15px 20px;
-}
-
-.comment-wrap ul li {
-  display: flex;
-  margin: 10px 0 30px 0;
-}
-
-.comment-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.comment-info {
-  flex: 1;
-  font-size: 14px;
-  margin-left: 10px;
-}
-
-.comment {
-  margin-bottom: 5px;
-}
-
-.comment-user {
-  color: palevioletred;
-  margin-right: 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.comment-content {
-  display: inline;
-}
-
-.comment-time {
-  color: grey;
-  margin-right: 20px;
-  margin-top: 5px;
-}
-
-.comment-bottom {
-  display: flex;
-  align-items: center;
-  font-size: 14px !important;
-}
-.re-comment {
-  background-color: #f3f1f3;
-  padding: 5px 10px;
-  color: rgba(0, 0, 0, 0.6);
-  margin-bottom: 5px;
-}
-.icon-dianzan::before {
-  content: "";
-  font-size: 10px;
-}
-.page-list {
-  text-align: center;
 }
 </style>

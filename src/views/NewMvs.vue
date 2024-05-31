@@ -7,22 +7,34 @@
         <span class="section-name">地区：</span>
         <ul class="section-tabs">
           <li>
-            <span :class="{ active: area == 'ALL' }" @click="area = 'ALL'">全部</span>
+            <span :class="{ active: area == 'ALL' }" @click="area = 'ALL'"
+              >全部</span
+            >
           </li>
           <li>
-            <span :class="{ active: area == 'CN' }" @click="area = 'CN'">内地</span>
+            <span :class="{ active: area == 'CN' }" @click="area = 'CN'"
+              >内地</span
+            >
           </li>
           <li>
-            <span :class="{ active: area == 'TW' }" @click="area = 'TW'">港台</span>
+            <span :class="{ active: area == 'TW' }" @click="area = 'TW'"
+              >港台</span
+            >
           </li>
           <li>
-            <span :class="{ active: area == 'EUNA' }" @click="area = 'EUNA'">欧美</span>
+            <span :class="{ active: area == 'EUNA' }" @click="area = 'EUNA'"
+              >欧美</span
+            >
           </li>
           <li>
-            <span :class="{ active: area == 'JP' }" @click="area = 'JP'">日本</span>
+            <span :class="{ active: area == 'JP' }" @click="area = 'JP'"
+              >日本</span
+            >
           </li>
           <li>
-            <span :class="{ active: area == 'KR' }" @click="area = 'KR'">韩国</span>
+            <span :class="{ active: area == 'KR' }" @click="area = 'KR'"
+              >韩国</span
+            >
           </li>
         </ul>
       </div>
@@ -31,19 +43,29 @@
         <span class="section-name">类型：</span>
         <ul class="section-tabs">
           <li>
-            <span :class="{ active: type == 'ALL' }" @click="type = 'ALL'">全部</span>
+            <span :class="{ active: type == 'ALL' }" @click="type = 'ALL'"
+              >全部</span
+            >
           </li>
           <li>
-            <span :class="{ active: type == 'GF' }" @click="type = 'GF'">官方版</span>
+            <span :class="{ active: type == 'GF' }" @click="type = 'GF'"
+              >官方版</span
+            >
           </li>
           <li>
-            <span :class="{ active: type == 'YS' }" @click="type = 'YS'">原声</span>
+            <span :class="{ active: type == 'YS' }" @click="type = 'YS'"
+              >原声</span
+            >
           </li>
           <li>
-            <span :class="{ active: type == 'XC' }" @click="type = 'XC'">现场版</span>
+            <span :class="{ active: type == 'XC' }" @click="type = 'XC'"
+              >现场版</span
+            >
           </li>
           <li>
-            <span :class="{ active: type == 'WY' }" @click="type = 'WY'">网易出品</span>
+            <span :class="{ active: type == 'WY' }" @click="type = 'WY'"
+              >网易出品</span
+            >
           </li>
         </ul>
       </div>
@@ -51,13 +73,19 @@
         <span class="section-name">排序：</span>
         <ul class="section-tabs">
           <li>
-            <span :class="{ active: order == 'FAST' }" @click="order = 'FAST'">上升最快</span>
+            <span :class="{ active: order == 'FAST' }" @click="order = 'FAST'"
+              >上升最快</span
+            >
           </li>
           <li>
-            <span :class="{ active: order == 'HOT' }" @click="order = 'HOT'">最热</span>
+            <span :class="{ active: order == 'HOT' }" @click="order = 'HOT'"
+              >最热</span
+            >
           </li>
           <li>
-            <span :class="{ active: order == 'NEW' }" @click="order = 'NEW'">最新</span>
+            <span :class="{ active: order == 'NEW' }" @click="order = 'NEW'"
+              >最新</span
+            >
           </li>
         </ul>
       </div>
