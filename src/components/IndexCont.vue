@@ -11,7 +11,7 @@
           <router-link to="/playlists"> 🎶推荐歌单 </router-link>
         </li>
         <li>
-          <router-link to="/newsongs"> 💿最新音乐 </router-link>
+          <router-link to="/newsongs"> 💿全部音乐 </router-link>
         </li>
         <li>
           <router-link to="/newmvs"> 📺最新MV </router-link>

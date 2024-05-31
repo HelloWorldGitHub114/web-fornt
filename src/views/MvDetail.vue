@@ -68,7 +68,7 @@ export default {
     });
     //MV相关推荐
     axios({
-      url: "/simi/mv",
+      url: "/mv/simi",
       method: "get",
       params: { mvid: this.$route.query.q },
     }).then((res) => {

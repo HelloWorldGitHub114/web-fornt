@@ -1,5 +1,4 @@
-﻿<!-- 当前后端的UserDetail使用id查询的 -->
-<!-- Todo：接口修改 -->
+﻿<!-- OK -->
 <template>
   <div class="userdetail">
     <div class="user-wrap">
@@ -26,15 +25,16 @@
                 :key="index"
                 @click="playListDetail(item.id)"
               >
-                <p class="first-p">播放量：{{ item.playCount }}</p>
-                <img :src="item.coverImgUrl" alt="" />
-                <p class="last-p">{{ item.name }}</p>
+                <p class="first-p">风格：{{ item.style }}</p>
+                <img :src="item.pic" alt="" />
+                <p class="last-p">{{ item.title }}</p>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div class="page-list">
+
+      <!-- <div class="page-list">
         <el-pagination
           @current-change="handleCurrentChange"
           :page-size="10"
@@ -43,9 +43,9 @@
           :total="total"
         >
         </el-pagination>
-      </div>
+      </div> -->
 
-      <h2>TA收藏的歌单</h2>
+      <!-- <h2>TA收藏的歌单</h2>
       <div class="list-content">
         <div class="songs-wrap">
           <div class="list">
@@ -73,7 +73,7 @@
           :total="totallike"
         >
         </el-pagination>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -84,22 +84,16 @@ export default {
   name: "UserDetail",
   data() {
     return {
-      // 创建歌单总条数
-      total: 0,
-      // 创建页码
-      page: 1,
-      // 创建歌单列表
       list: [],
-      totallike: 0,
-      pagelike: 1,
-      listlike: [],
-      user: {
-        avatar: "",
-        username: "",
-        nickname: "",
-        location: "",
-        introduction: "",
-      },
+      // 创建歌单总条数
+      // total: 0,
+      // 创建页码
+      // page: 1,
+      // 创建歌单列表
+      // totallike: 0,
+      // pagelike: 1,
+      // listlike: [],
+      user: {},
     };
   },
   created() {
@@ -116,30 +110,20 @@ export default {
       });
       //获取用户创建的歌单
       axios({
-        url: "/top/playlist",
-        // url: `/songList/detail-userId/${this.$route.query.q}`
+        url: `/songList/detail-userId/${this.$route.query.q}`,
         method: "get",
-        params: {
-          limit: 10,
-          offset: (this.page - 1) * 10,
-        },
       }).then((res) => {
-        this.list = res.data.playlists;
-        this.total = res.data.total;
+        this.list = res.data.data;
       });
       //获取用户收藏的歌单
-      axios({
-        url: "/top/playlist",
-        // url: `/songList/detail-userId/${this.$route.query.q}`
-        method: "get",
-        params: {
-          limit: 10,
-          offset: (this.pagelike - 1) * 10,
-        },
-      }).then((res) => {
-        this.listlike = res.data.playlists;
-        this.totallike = res.data.total;
-      });
+      // axios({
+      //   url: "/top/playlist",
+      //   // url: `/songList/detail-userId/${this.$route.query.q}`
+      //   method: "get",
+      // }).then((res) => {
+      //   this.listlike = res.data.playlists;
+      //   this.totallike = res.data.total;
+      // });
     },
     handleCurrentChange(val) {
       this.page = val;

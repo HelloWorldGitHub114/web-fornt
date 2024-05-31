@@ -25,9 +25,9 @@
                   <span>{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="artists[0].name" label="歌手" width="200">
+              <el-table-column prop="singerName" label="歌手" width="200">
               </el-table-column>
-              <el-table-column prop="album.name" label="专辑" width="250">
+              <el-table-column prop="albumName" label="专辑" width="250">
               </el-table-column>
               <el-table-column prop="duration" label="时长" width="250">
               </el-table-column>
@@ -45,9 +45,9 @@
                   :key="index"
                   @click="playListDetail(item.id)"
                 >
-                  <p class="first-p">播放量：{{ item.playCount }}</p>
-                  <img :src="item.coverImgUrl" alt="recommend" />
-                  <p class="last-p" :title="item.name">{{ item.name }}</p>
+                  <p class="first-p">风格：{{ item.style }}</p>
+                  <img :src="item.pic" alt="recommend" />
+                  <p class="last-p" :title="item.title">{{ item.title }}</p>
                 </li>
               </ul>
             </div>
@@ -99,7 +99,6 @@
             </li>
           </ul>
         </el-tab-pane> -->
-
       </el-tabs>
       <el-pagination
         class="page-list"
@@ -151,19 +150,18 @@ export default {
     playMusic(row) {
       let id = row.id;
       axios({
-        url: "/song/url",
+        url: `/song/detail/${id}`,
         method: "get",
-        params: {
-          id,
-        },
       }).then((res) => {
-        this.$parent.$data.musicurl = res.data.data[0].url;
+        console.log("音乐地址：", res.data.data.url);
+        this.$parent.$data.musicinfo = row;
+        this.$parent.$data.musicurl = res.data.data.url;
         let musicitem = {
           id: row.id,
           name: row.name,
-          musicArtist: row.artists[0].name,
+          musicArtist: row.singerName,
           duration: row.duration,
-          picUrl: row.picUrl,
+          picUrl: row.pic,
         };
         this.$store.commit("changeMusicInfo", musicitem);
         this.$store.commit("changeMusicQueue", musicitem);
@@ -175,75 +173,48 @@ export default {
       });
     },
     musicLists() {
-      // 搜索接口
-      axios({
-        url: "/search",
-        method: "get",
-        params: {
-          keywords: this.reqmusic,
-          type: this.tag,
-          limit: 20,
-          offset: (this.page - 1) * 20,
-        },
-      }).then((res) => {
-        //歌曲搜索
-        if (this.tag == 1) {
-          let songsList = [];
-          let resultList = res.data.result.songs;
-          if (res.data.result.songCount) {
-            this.total = res.data.result.songCount;
-          }
-          // 时间格式转换
-          for (const item of resultList) {
-            let duration = item.duration;
-            let min = parseInt(duration / 60000)
-              .toString()
-              .padStart(2, "0");
-            let second = parseInt((duration - min * 60000) / 1000)
-              .toString()
-              .padStart(2, "0");
-            duration = `${min}:${second}`;
-            item.duration = duration;
-            songsList.push(item);
-          }
-          this.songList = songsList;
-        }
-        //歌单搜索
-        else if (this.tag == 1000) {
-          this.playList = res.data.result.playlists;
-          if (res.data.result.playlistCount) {
-            this.total = res.data.result.playlistCount;
-          }
-          for (let i = 0; i < this.playList.length; i++) {
-            if (this.playList[i].playCount > 10000) {
-              this.playList[i].playCount =
-                parseInt(this.playList[i].playCount / 10000) + "w";
-            }
+      //歌曲搜索
+      if (this.tag == 1) {
+        axios({
+          url: `/song/song-name/detail/${this.reqmusic}/${this.page}/${20}`,
+          method: "get",
+        }).then((res) => {
+          this.songList = res.data.data;
+          this.total = this.songList.length;
+        });
+      }
+      //歌单搜索
+      else if (this.tag == 1000) {
+        axios({
+          url: `/songList/title/detail/${this.reqmusic}/${this.page}/${20}`,
+          method: "get",
+        }).then((res) => {
+          this.playList = res.data.data;
+          this.total = this.playList.length;
+        });
+        for (let i = 0; i < this.playList.length; i++) {
+          if (this.playList[i].playCount > 10000) {
+            this.playList[i].playCount =
+              parseInt(this.playList[i].playCount / 10000) + "w";
           }
         }
-        //MV搜索
-        else if (this.tag == 1004) {
-          this.mvList = res.data.result.mvs;
-          if (res.data.result.mvCount) {
-            this.total = res.data.result.mvCount;
-          }
-          for (let i = 0; i < this.mvList.length; i++) {
-            if (this.mvList[i].playCount > 10000) {
-              this.mvList[i].playCount =
-                parseInt(this.mvList[i].playCount / 10000) + "w";
-            }
-            let duration = this.mvList[i].duration;
-            let min = parseInt(duration / 60000)
-              .toString()
-              .padStart(2, "0");
-            let second = parseInt((duration - min * 60000) / 1000)
-              .toString()
-              .padStart(2, "0");
-            duration = `${min}:${second}`;
-            this.mvList[i].duration = duration;
+      }
+      //MV搜索
+      else if (this.tag == 1004) {
+        axios({
+          url: `/mv/title/detail/${this.reqmusic}/${this.page}/${20}`,
+          method: "get",
+        }).then((res) => {
+          this.mvList = res.data.data;
+          this.total = this.mvList.length;
+        });
+        for (let i = 0; i < this.mvList.length; i++) {
+          if (this.mvList[i].playCount > 10000) {
+            this.mvList[i].playCount =
+              parseInt(this.mvList[i].playCount / 10000) + "w";
           }
         }
-      });
+      }
     },
     handleCurrentChange(val) {
       console.log(`当前页:${val}`);
@@ -305,9 +276,8 @@ ul {
   margin-bottom: 200px;
   width: 100%;
 }
-.el-tab-pane
-{
-  width:1000px;
+.el-tab-pane {
+  width: 1000px;
 }
 .mvIcon {
   margin-left: 5px;

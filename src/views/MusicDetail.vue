@@ -1,8 +1,8 @@
-﻿<!-- finished -->
+﻿<!-- OK -->
 <template>
   <div class="musicdetail">
     <div class="musicright-wrap">
-      <h2>预留歌词滚动区域</h2>
+      <!-- <h2>预留歌词滚动区域</h2>
 
       <div class="lyrics-container">
         <div class="lyrics">
@@ -10,33 +10,29 @@
           <p>...</p>
           <p>...</p>
         </div>
-      </div>
+      </div> -->
 
       <!-- 调用评论组件 -->
       <!-- 向子组件传递： -->
       <!-- type：music MV 或者 songList -->
       <!-- id -->
       <!-- 子组件通过请求得到评论数据，父组件不管理数据 -->
-      <CommentSection
-      type="music"
-      :id=this.$route.query.q
-    />
-
+      <CommentSection type="music" :id="this.$route.query.q" />
     </div>
 
     <div class="musicleft-wrap">
       <h2>音乐详情</h2>
       <div class="music-info">
         <div class="music-info-head">
-          <img class="musicartimg" :src="musicinfos.cover" alt="" />
-          <p class="music-nickname">{{ musicinfos.artistName }}</p>
+          <img class="musicartimg" :src="musicinfos.pic" alt="" />
+          <p class="music-nickname">{{ musicinfos.singerName }}</p>
         </div>
         <div class="music-name">{{ musicinfos.name }}</div>
         <div class="music-other">
-          <div class="music-time">发布时间：{{ musicinfos.publishTime }}</div>
+          <div class="music-time">发布时间：{{ musicinfos.createTime }}</div>
           <div class="music-playcount">播放：{{ musicinfos.playCount }}次</div>
         </div>
-        <p class="music-desc">{{ musicinfos.desc }}</p>
+        <p class="music-desc">{{ musicinfos.introduction }}</p>
       </div>
     </div>
   </div>
@@ -44,11 +40,11 @@
 
 <script>
 import axios from "axios";
-import CommentSection from './CommentSection.vue';
+import CommentSection from "./CommentSection.vue";
 export default {
   name: "MusicDetail",
   components: {
-    CommentSection
+    CommentSection,
   },
   data() {
     return {
@@ -56,19 +52,28 @@ export default {
     };
   },
   created() {
-    //music信息
-    // axios({
-    //   url: "/music/detail",
-    //   method: "get",
-    //   params: { id: this.$route.query.q },
-    // }).then((res) => {
-    //   this.musicinfos = res.data.data;
-    //   if (this.musicinfos.playCount > 10000) {
-    //     this.musicinfos.playCount = parseInt(this.musicinfos.playCount / 10000) + "w";
-    //   }
-    // });
+    this.getmusicinfo();
   },
   methods: {
+    getmusicinfo()
+    {
+      axios({
+      url: `/song/detail/${this.$route.query.q}`,
+      method: "get",
+    }).then((res) => {
+      this.musicinfos = res.data.data;
+      console.log(res.data.data);
+      if (this.musicinfos.playCount > 10000) {
+        this.musicinfos.playCount =
+          parseInt(this.musicinfos.playCount / 10000) + "w";
+      }
+    });
+    }
+  },
+  watch: {
+    $route() {
+      this.getmusicinfo();
+    },
   },
 };
 </script>
@@ -166,5 +171,4 @@ ul {
   padding: 10px;
   box-sizing: border-box;
 }
-
 </style>

@@ -1,4 +1,4 @@
-﻿<!-- finished -->
+﻿<!-- OK -->
 <template>
   <div class="musicprocess">
     <audio
@@ -18,27 +18,25 @@
       </div>
       <!-- 模块：上一首，播放，暂停，下一首 -->
       <div class="audio-btns">
-        <a href="#" class="iconfont" @click="previous()"> ⏮️ </a>
+        <span class="iconfont" @click="previous()"> ⏮️ </span>
         <!-- 播放 -->
-        <a
-          href="#"
+        <span
           class="iconfont"
           v-if="!isPaused"
           @click="changeStatus('playing')"
         >
           ▶️
-        </a>
+        </span>
         <!-- 暂停 -->
-        <a
-          href="#"
+        <span
           class="iconfont"
           v-if="isPaused"
           @click="changeStatus('pasuing')"
         >
           ⏸️
-        </a>
+        </span>
         <!-- 下一首 -->
-        <a href="#" class="iconfont" @click="next()"> ⏯️ </a>
+        <span class="iconfont" @click="next()"> ⏯️ </span>
       </div>
       <!-- 进度条 -->
       <div class="audio-progress">
@@ -58,13 +56,12 @@
       <!-- 音量面板 -->
       <div class="mode-volume-list">
         <!-- 音量图标 -->
-        <a herf="#" class="iconfont" v-if="voice" @click="voice = 0">🔊</a>
-        <a
-          href="#"
+        <span class="iconfont" v-if="voice" @click="voice = 0">🔊</span>
+        <span
           class="iconfont"
           v-if="!voice"
           @click="voice = cacheVoice == 0 ? 0.7 : cacheVoice"
-          >🔈</a
+          >🔈</span
         >
         <!-- 音量控制面板 -->
         <div class="volume-panel">
@@ -84,7 +81,7 @@
       </div>
       <!-- 列表 -->
       <div class="mode-music-list">
-        <a herf="#" class="iconfont">⏏️</a>
+        <span class="iconfont">⏏️</span>
         <MusicQueue class="musicqueue"></MusicQueue>
       </div>
     </div>
@@ -222,7 +219,7 @@ export default {
       return this.$options.filters.timeFormat(value);
     },
     musicDetail(id) {
-      this.$router.push(`/musicdetail?q=${id}`);
+      if(id) this.$router.push(`/musicdetail?q=${id}`);
     },
   },
   computed: {
@@ -280,17 +277,9 @@ export default {
       }
     },
     musicinfo() {
-      if (this.musicinfo.picUrl != undefined) {
-        this.musicimg = this.musicinfo.picUrl;
-      } else if (this.musicinfo.album != undefined) {
-        if (this.musicinfo.album.picUrl != undefined) {
-          this.musicimg = this.musicinfo.album.picUrl;
-        } else {
-          this.musicimg = this.musicinfo.album.artist.img1v1Url;
-        }
-      } else if (this.musicinfo.al != undefined) {
-        this.musicimg = this.musicinfo.al.picUrl;
-      }
+      if (this.musicinfo.pic != undefined) {
+        this.musicimg = this.musicinfo.pic;
+      } 
     },
   },
 };

@@ -1,16 +1,17 @@
+<!-- OK -->
 <template>
   <div class="playlists">
     <div class="top-card-wrap">
       <!-- 封面 -->
-      <img :src="topList.coverImgUrl" alt="" class="bg-blur" />
+      <img :src="topList.pic" alt="" class="bg-blur" />
       <div class="top-card">
         <div class="img-wrap">
-          <img :src="topList.coverImgUrl" alt="" />
+          <img :src="topList.pic" alt="" />
         </div>
         <div class="card-content">
           <div class="card-tag">精品歌单</div>
-          <div class="card-title">{{ topList.name }}</div>
-          <div class="card-info">{{ topList.description }}</div>
+          <div class="card-title">{{ topList.title }}</div>
+          <div class="card-info">{{ topList.introduction }}</div>
         </div>
       </div>
     </div>
@@ -37,9 +38,9 @@
                 :key="index"
                 @click="playListDetail(item.id)"
               >
-                <p class="first-p">播放量：{{ item.playCount }}</p>
-                <img :src="item.coverImgUrl" alt="" />
-                <p class="last-p">{{ item.name }}</p>
+                <p class="first-p">风格：{{ item.style }}</p>
+                <img :src="item.pic" alt="" />
+                <p class="last-p">{{ item.title }}</p>
               </li>
             </ul>
           </div>
@@ -98,32 +99,21 @@ export default {
   methods: {
     topData() {
       axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/top/playlist/highquality",
+        url: `/songList/style/detail/${this.tabActive}/${1}/${1}`,
         method: "get",
-        params: {
-          limit: 1,
-          // 分类数据
-          cat: this.tabActive,
-        },
       }).then((res) => {
-        this.topList = res.data.playlists[0];
+        this.topList = res.data.data[0];
       });
     },
     listData() {
       axios({
-        url: "https://mock.apifox.com/m1/4257489-3899055-default/top/playlist",
+        //推荐歌单
+        url: `/songList/style/detail/${this.tabActive}/${this.page}/${10}`,
         method: "get",
-        params: {
-          limit: 10,
-          // 起始的值：(页码-1)*每页多少条数据
-          offset: (this.page - 1) * 10,
-          // 分类数据
-          cat: this.tabActive,
-        },
       }).then((res) => {
-        console.log(res.data.playlists);
-        this.list = res.data.playlists;
-        this.total = res.data.total;
+        console.log(res.data.data);
+        this.list = res.data.data;
+        this.total = this.list.length;
       });
     },
     changeActive(item) {
@@ -212,7 +202,7 @@ ul {
   color: palevioletred;
   text-align: center;
   border-radius: 10px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .card-title {

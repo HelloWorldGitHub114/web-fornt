@@ -118,20 +118,19 @@ export default {
     playMusic(row) {
       let id = row.id;
       axios({
-        url: "/song/url",
+        url: `/song/detail/${id}`,
         method: "get",
-        params: { id },
       }).then((res) => {
+        console.log("音乐地址：",res.data.data.url);
         this.$parent.$data.musicinfo = row;
-        this.$parent.$data.musicurl = res.data.data[0].url;
+        this.$parent.$data.musicurl = res.data.data.url;
       });
       let musicitem = {
         id: row.id,
         name: row.name,
-        musicArtist: row.ar[0].name,
-        duration: row.dt,
+        musicArtist: singerName,
+        duration: row.duration,
       };
-      console.log(musicitem);
       this.$store.commit("changeMusicInfo", musicitem);
       this.$store.commit("changeMusicQueue", musicitem);
       let ids = [];
@@ -146,17 +145,17 @@ export default {
         let musicitem = {
           id: item.id,
           name: item.name,
-          musicArtist: item.ar[0].name,
-          duration: item.dt,
-          picUrl: item.al.picUrl,
+          musicArtist: item.singerName,
+          duration: item.duration,
+          picUrl: item.al.pic,
         };
         this.$store.commit("changeMusicQueue", musicitem);
       }
       this.$store.commit("changeNowIndex", 0);
       this.playMusic(allSongs[0]);
     },
-    userDetail(username) {
-      this.$router.push(`/userdetail?q=${username}`);
+    userDetail(userid) {
+      this.$router.push(`/userdetail?q=${userid}`);
     },
   },
   created() {

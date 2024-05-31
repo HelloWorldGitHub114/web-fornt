@@ -36,7 +36,8 @@ const mutations = {
 const state = {
   musicQueue: [],
   globalMusicInfo: {},
-  nowIndex: 0
+  nowIndex: 0,
+  userid: -1,
 }
 export default new Vuex.Store({
   actions, mutations, state,

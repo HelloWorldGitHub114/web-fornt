@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="hot-title">热搜榜</div>
+        <!-- <div class="hot-title">热搜榜</div>
         <ul>
           <li
             class="hot-item"
@@ -70,7 +70,7 @@
               <div class="hot-content">{{ item.content }}</div>
             </div>
           </li>
-        </ul>
+        </ul> -->
       </el-scrollbar>
     </div>
   </div>
@@ -85,7 +85,7 @@ export default {
       // 搜索框内容
       inputValue: "",
       // 热搜榜数据
-      hotData: [],
+      // hotData: [],
       // 历史记录
       history: [],
       // 是否展示热搜榜
@@ -107,16 +107,15 @@ export default {
       this.inputValue = "";
     },
     getSearchHot() {
-      // 获取热搜榜数据
       this.showHot = true;
-      if (this.hotData.length == 0) {
-        axios({
-          url: "/search/hot/detail",
-          method: "get",
-        }).then((res) => {
-          this.hotData = res.data.data;
-        });
-      }
+      // if (this.hotData.length == 0) {
+      //   axios({
+      //     url: "/search/hot/detail",
+      //     method: "get",
+      //   }).then((res) => {
+      //     this.hotData = res.data.data;
+      //   });
+      // }
     },
     toHot(value) {
       this.inputValue = value;

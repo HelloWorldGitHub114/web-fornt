@@ -1,4 +1,5 @@
-﻿<template>
+﻿<!-- OK -->
+<template>
   <div class="comment-wrap">
     <div class="comment-container">
       <h2>评论</h2>
@@ -15,15 +16,16 @@
     <h3 class="comment-title">评论({{ total }})</h3>
     <ul>
       <li class="item" v-for="(item, index) in Comments" :key="index">
-        <img :src="item.user.avatarUrl" alt="" class="comment-avatar" />
+        <img :src="item.avatar" alt="" class="comment-avatar" />
         <div class="comment-info">
           <div class="comment">
-            <span class="comment-user" @click="userDetail(item.user.nickname)"
-              >{{ item.user.nickname }}:</span
+            <span class="comment-user" @click="userDetail(item.userId)"
+              >{{ item.nickname }}:</span
             >
             <span class="comment-content">{{ item.content }}</span>
           </div>
-          <div
+          <!-- 评论楼中楼 无接口 -->
+          <!-- <div
             class="re-comment"
             v-for="(reply, Rindex) in item.beReplied"
             :key="Rindex"
@@ -32,11 +34,11 @@
               >{{ reply.user.nickname }}:</span
             >
             <span class="comment-content">{{ reply.content }}</span>
-          </div>
+          </div> -->
           <div class="comment-bottom">
-            <p class="comment-time">{{ item.time }}</p>
+            <p class="comment-time">{{ item.createTime }}</p>
             <span class="comment-time iconfont icon-dianzan">{{
-              item.likedCount
+              item.up
             }}</span>
           </div>
         </div>
@@ -60,12 +62,10 @@ export default {
   name: "CommentSection",
   props: {
     type: {
-      //MV、音乐或歌单？要查找的是什么的评论
       type: String,
       required: true,
     },
     id: {
-      //MV、音乐或歌单的id，用于查询评论
       type: String,
       required: true,
     },
@@ -79,8 +79,8 @@ export default {
     };
   },
   methods: {
-    userDetail(username) {
-      this.$router.push(`/userdetail?q=${username}`);
+    userDetail(userid) {
+      this.$router.push(`/userdetail?q=${userid}`);
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -88,34 +88,77 @@ export default {
     },
     submitComment() {
       //需要根据type的类型进行评论
-      if (this.type == "music") {
-        console.log("评论 music", this.newComment);
-      } else if (this.type == "MV") {
-        console.log("评论 MV", this.newComment);
-      } else if (this.type == "songList") {
-        console.log("评论 songList", this.newComment);
+      if (this.userid == -1) {
+        this.$message({
+          type: "error",
+          message: "请先登陆再发表评论",
+        });
+      } else {
+        let musicid = 0;
+        let mvid = 0;
+        let songlistid = 0;
+        let createTime = new Date().toISOString();
+        if (this.type == "music") {
+          musicid = this.id;
+        } else if (this.type == "MV") {
+          mvid = this.id;
+        } else if (this.type == "songList") {
+          songlistid = this.id;
+        }
+        axios({
+          url: `/comment/add`,
+          method: "post",
+          params: {
+            content: this.newComment,
+            songId: musicid,
+            songListId: songlistid,
+            mvId: mvid,
+            userId: this.userid,
+            createTime: createTime,
+          },
+        }).then((res) => {
+          if (res.data.code == "200") {
+            this.$message({
+              type: "info",
+              message: "评论发表成功",
+            });
+          } else {
+            this.$message({
+              type: "error",
+              message: "发表失败，请稍后再试",
+            });
+          }
+        });
+        this.newComment = "";
+        this.topCommpent(); //获取最新数据
       }
-      this.newComment = "";
-      this.topCommpent();//获取最新数据
     },
     topCommpent() {
       //需要根据type的类型获取评论
+      let axiosurl = "";
+      if (this.type == "music") {
+        axiosurl = `/comment/detail-songId/${this.id}/${this.page}/${20}`;
+      } else if (this.type == "MV") {
+        axiosurl = `/comment/detail-mvId/${this.id}/${this.page}/${20}`;
+      } else if (this.type == "songList") {
+        axiosurl = `/comment/detail-songListId/${this.id}/${this.page}/${20}`;
+      }
       axios({
-        url: `/comment/music`,
+        url: axiosurl,
         method: "get",
-        params: {
-          id: this.id,
-          limit: 20,
-          offset: (this.page - 1) * 20,
-        },
       }).then((res) => {
-        this.Comments = res.data.data.comments;
-        this.total = res.data.data.total;
+        this.Comments = res.data.data;
+        this.total = this.Comments.length;
       });
     },
   },
   created() {
     this.topCommpent();
+  },
+  computed: {
+    userid() {
+      return this.$store.state.userid;
+    },
   },
 };
 </script>

@@ -10,7 +10,7 @@ import axios from 'axios';
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'https://mock.apifox.com/m1/4257489-3899055-default';
+axios.defaults.baseURL = 'http://10.149.242.213:8081';
 
 Vue.use(VueParticles)
 Vue.use(ElementUI);

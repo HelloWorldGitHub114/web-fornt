@@ -128,15 +128,13 @@ export default {
       // 播放音乐
       let id = row.id;
       axios({
-        url: "/song/url",
+        url: `/song/detail/${id}`,
         method: "get",
-        params: {
-          id,
-        },
       }).then((res) => {
         console.log("发布音乐id:", id);
-        pubsub.publish("musicinfodemo", row);
-        pubsub.publish("musicurldemo", res.data.data[0].url);
+        console.log("音乐地址：",res.data.data.url);
+        pubsub.publish("musicinfodemo", res.data.data);
+        pubsub.publish("musicurldemo", res.data.data.url);
       });
       this.$store.commit("changeMusicInfo", row);
       let ids = [];

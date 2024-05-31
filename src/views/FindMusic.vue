@@ -27,9 +27,9 @@
             :key="index"
             @click="playListDetail(item.id)"
           >
-            <p class="first-p">{{ item.copywriter }}</p>
-            <img :src="item.picUrl" alt="recommd" />
-            <p class="last-p" :title="item.name">{{ item.name }}</p>
+            <p class="first-p">{{ item.userId }}</p>
+            <img :src="item.pic" alt="recommd" />
+            <p class="last-p" :title="item.title">{{ item.title }}</p>
           </li>
         </ul>
       </div>
@@ -45,12 +45,12 @@
           @click="playMusic(item)"
         >
           <div class="music-img-warp">
-            <img :src="item.picUrl" alt="newSongs" />
+            <img :src="item.pic" alt="newSongs" />
             <p class="iconfont icon-play"></p>
           </div>
           <div class="music-info">
             <p class="music-name">{{ item.name }}</p>
-            <p class="music-singer">{{ item.song.artists[0].name }}</p>
+            <p class="music-singer">{{ item.singerName }}</p>
           </div>
         </li>
       </ul>
@@ -103,32 +103,26 @@ export default {
   },
   created() {
     // 轮播图
-    axios({
-      url: "/banner",
-      method: "get",
-      params: {},
-    }).then((res) => {
-      this.banners = res.data.data.banners;
-    });
+    // axios({
+    //   url: "/banner",
+    //   method: "get",
+    //   params: {},
+    // }).then((res) => {
+    //   this.banners = res.data.data.banners;
+    // });
     // 推荐歌单
     axios({
-      url: "/personalized",
+      url: `/songList/getRandomSongList/${1}`,
       method: "get",
-      params: {
-        limit: 10,
-      },
     }).then((res) => {
-      this.musiclists = res.data.data.results;
+      this.musiclists = res.data.data;
     });
     // 最新音乐
     axios({
-      url: "/personalized/newsong",
+      url: `/song/allSong/${1}/${5}`,
       method: "get",
-      params: {
-        limit: 10,
-      },
     }).then((res) => {
-      this.newsmusic = res.data.data.result;
+      this.newsmusic = res.data.data;
     });
     // 最新MV
     axios({
@@ -144,30 +138,21 @@ export default {
   methods: {
     // 播放音乐
     playMusic(item) {
+      let id = item.id;
       axios({
-        url: "/song/url",
-        method: "get",
-        params: {
-          id: item.id,
-        },
+        url: `/song/detail/${id}`,
+        method: "get"
       }).then((res) => {
+        console.log("音乐地址：",res.data.data.url);
         this.$parent.$data.musicinfo = item;
-        this.$parent.$data.musicurl = res.data.data[0].url;
+        this.$parent.$data.musicurl = res.data.data.url;
       });
-      let time = item.song.duration;
-      let min = parseInt(time / 60000)
-        .toString()
-        .padStart(2, "0");
-      let second = parseInt((time - min * 60000) / 1000)
-        .toString()
-        .padStart(2, "0");
-      time = min + ":" + second;
       let musicitem = {
         id: item.id,
         name: item.name,
-        musicArtist: item.song.artists[0].name,
-        duration: time,
-        picUrl: item.picUrl,
+        musicArtist: item.singerName,
+        duration: item.duration,
+        picUrl: item.pic,
       };
       this.$store.commit("changeMusicInfo", musicitem);
       this.$store.commit("changeMusicQueue", musicitem);
