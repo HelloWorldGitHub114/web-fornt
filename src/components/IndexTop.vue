@@ -156,6 +156,7 @@ export default {
     },
     userDetail() {
       this.$router.push(`/userdetail?q=${this.$store.state.userid}`);
+      this.$router.go(0)
     },
   },
   created() {
