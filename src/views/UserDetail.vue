@@ -14,13 +14,23 @@
         <p class="user-desc">个性签名：{{ user.introduction }}</p>
       </div>
 
-      <h2>TA创建的歌单</h2>
+      <h2 v-if="this.user.id === LoginUserId">我创建的歌单</h2>
+      <h2 v-else>TA创建的歌单</h2>
+
       <div class="list-content">
         <div class="songs-wrap">
           <div class="list">
             <ul>
+              <li class="newsonglist">
+                <img
+                  @click="createNewList()"
+                  src="https://img2.baidu.com/it/u=1207583718,1175161658&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"
+                  alt=""
+                />
+                <p>创建新歌单</p>
+              </li>
               <li
-                class="iconfont icon-play"
+                class="iconfont icon-play songsli"
                 v-for="(item, index) in list"
                 :key="index"
                 @click="playListDetail(item.id)"
@@ -137,6 +147,11 @@ export default {
       this.$router.push(`/playlistdetail?q=${id}`);
     },
   },
+  computed: {
+    LoginUserId() {
+      return this.$store.state.userid;
+    },
+  },
 };
 </script>
   
@@ -202,14 +217,22 @@ ul {
   flex-wrap: wrap;
 }
 
-.songs-wrap .list li {
+.songsli {
   width: 18%;
   margin: 10px 0;
   position: relative;
   overflow-y: hidden;
 }
 
-.list li .first-p {
+.newsonglist {
+  cursor: pointer;
+  width: 18%;
+  margin: 10px 0;
+  position: relative;
+  overflow-y: hidden;
+}
+
+.songsli .first-p {
   position: absolute;
   top: 0;
   left: 0;
@@ -223,7 +246,7 @@ ul {
   transition: 0.5s;
 }
 
-.list li::before {
+.songsli::before {
   content: "\ea42";
   position: absolute;
   bottom: 25px;
@@ -242,11 +265,11 @@ ul {
   cursor: pointer;
 }
 
-.list li:hover .first-p {
+.songsli:hover .first-p {
   transform: translateY(0);
 }
 
-.list li:hover::before {
+.songsli:hover::before {
   opacity: 1;
 }
 
