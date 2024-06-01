@@ -3,7 +3,7 @@
   <!-- 最新MV -->
   <div class="new-mvs">
     <div class="filter-wrap">
-      <div class="section-wrap">
+      <!-- <div class="section-wrap">
         <span class="section-name">地区：</span>
         <ul class="section-tabs">
           <li>
@@ -37,9 +37,9 @@
             >
           </li>
         </ul>
-      </div>
+      </div> -->
 
-      <div class="section-wrap">
+      <!-- <div class="section-wrap">
         <span class="section-name">类型：</span>
         <ul class="section-tabs">
           <li>
@@ -68,15 +68,11 @@
             >
           </li>
         </ul>
-      </div>
+      </div> -->
+
       <div class="section-wrap">
         <span class="section-name">排序：</span>
         <ul class="section-tabs">
-          <li>
-            <span :class="{ active: order == 'FAST' }" @click="order = 'FAST'"
-              >上升最快</span
-            >
-          </li>
           <li>
             <span :class="{ active: order == 'HOT' }" @click="order = 'HOT'"
               >最热</span
@@ -145,11 +141,9 @@ export default {
         url: "/mv/all",
         method: "get",
         params: {
-          limit: 12,
-          type: this.type,
+          pagesize: 12,
+          pageno: this.page,
           order: this.order,
-          area: this.area,
-          offset: (this.page - 1) * 12,
         },
       }).then((res) => {
         this.mvLists = res.data.data.Mvs;

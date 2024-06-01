@@ -151,7 +151,6 @@
     mounted(){
       
       if(window.localStorage.getItem('isLogin') === 'true'){
-        // alert(window.localStorage.getItem('user'))
         let user = JSON.parse(window.localStorage.getItem('user'))
         this.$store.commit("changeUserid",user.user.id)
         this.$store.commit("changeUsername",user.user.nickname)

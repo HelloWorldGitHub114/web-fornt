@@ -94,43 +94,82 @@ export default {
           message: "请先登陆再发表评论",
         });
       } else {
-        let musicid = 0;
-        let mvid = 0;
-        let songlistid = 0;
         let createTime = new Date().toISOString();
         if (this.type == "music") {
-          musicid = this.id;
+          axios({
+            url: `/comment/add`,
+            method: "post",
+            data: {
+              content: this.newComment,
+              songId: this.id,
+              userId: this.userid,
+              // createTime: createTime,
+            },
+          }).then((res) => {
+            if (res.data.code == "200") {
+              this.$message({
+                type: "info",
+                message: "评论发表成功",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "发表失败，请稍后再试",
+              });
+            }
+          });
         } else if (this.type == "MV") {
-          mvid = this.id;
+          axios({
+            url: `/comment/add`,
+            method: "post",
+            data: {
+              content: this.newComment,
+              mvId: this.id,
+              userId: this.userid,
+              // createTime: createTime,
+            },
+          }).then((res) => {
+            if (res.data.code == "200") {
+              this.$message({
+                type: "info",
+                message: "评论发表成功",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "发表失败，请稍后再试",
+              });
+            }
+          });
         } else if (this.type == "songList") {
-          songlistid = this.id;
+          axios({
+            url: `/comment/add`,
+            method: "post",
+            data: {
+              content: this.newComment,
+              songListId: this.id,
+              userId: this.userid,
+              // createTime: createTime,
+            },
+          }).then((res) => {
+            if (res.data.code == "200") {
+              this.$message({
+                type: "info",
+                message: "评论发表成功",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "发表失败，请稍后再试",
+              });
+            }
+          });
         }
-        axios({
-          url: `/comment/add`,
-          method: "post",
-          params: {
-            content: this.newComment,
-            songId: musicid,
-            songListId: songlistid,
-            mvId: mvid,
-            userId: this.userid,
-            createTime: createTime,
-          },
-        }).then((res) => {
-          if (res.data.code == "200") {
-            this.$message({
-              type: "info",
-              message: "评论发表成功",
-            });
-          } else {
-            this.$message({
-              type: "error",
-              message: "发表失败，请稍后再试",
-            });
-          }
-        });
         this.newComment = "";
-        this.topCommpent(); //获取最新数据
+        setTimeout(() => {
+          this.topCommpent();
+        }, 500);
+         //获取最新数据
       }
     },
     topCommpent() {

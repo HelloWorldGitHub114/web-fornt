@@ -2,23 +2,23 @@
   <div class="playlist-detail">
     <div class="playlist-topcard">
       <div class="topcard-img">
-        <img :src="playlist.coverImgUrl" alt="" />
+        <img :src="playlist.pic" alt="" />
       </div>
       <div class="topcard-right">
         <div class="playlist-name">
           <div class="tag1">歌单</div>
-          {{ playlist.name }}
+          {{ playlist.title }}
         </div>
         <div class="user-info">
           <div class="user-avatar">
-            <img :src="avatarUrl" alt="" />
+            <img :src="user.avatar" alt="" />
           </div>
-          <div class="user-name" @click="userDetail(nickname)">
-            {{ nickname }}
+          <div class="user-name" @click="userDetail(user.id)">
+            {{ user.nickname }}
           </div>
           <div class="create-time">
             <span>{{ playlist.createTime }}</span> 创建
-            <span>共{{ allmusic }}首</span>
+            <span>共{{ total }}首</span>
           </div>
         </div>
         <div class="playAllBtn" @click="playAllMusic()">
@@ -26,17 +26,14 @@
         </div>
         <div class="loveBtn"><i class="iconfont icon-love-all"></i>收藏</div>
         <div class="playlist-tags">
-          <span>标签：</span>
-          <span
-            v-for="(item, index) in playlist.tags"
-            :key="index"
-            class="tags"
-            >{{ item }}</span
-          >
+          <span>风格：</span>
+          <span class="tags">{{ playlist.style }}</span>
         </div>
         <div class="playlist-desc">
           <span>简介：</span>
-          <span :title="playlist.description">{{ playlist.description }}</span>
+          <span :title="playlist.introduction">{{
+            playlist.introduction
+          }}</span>
         </div>
       </div>
     </div>
@@ -48,20 +45,33 @@
             <el-table-column width="150">
               <template slot-scope="scope">
                 <div class="img-wrap" @click="playMusic(scope.row)">
-                  <img :src="scope.row.al.picUrl" alt="" />
+                  <img :src="scope.row.pic" alt="" />
                   <p class="iconfont icon-play"></p>
                 </div>
               </template>
             </el-table-column>
             <el-table-column prop="name" label="音乐标题" width="200">
             </el-table-column>
-            <el-table-column prop="ar[0].name" label="歌手" width="220">
+            <el-table-column prop="singerName" label="歌手" width="220">
             </el-table-column>
-            <el-table-column prop="al.name" label="专辑" width="300">
+            <el-table-column prop="albumName" label="专辑" width="300">
             </el-table-column>
-            <el-table-column prop="dt" label="时长"> </el-table-column>
+            <el-table-column prop="duration" label="时长"> </el-table-column>
           </el-table>
+
+          <div class="page-list">
+          <el-pagination
+            @current-change="handleCurrentChange"
+            :page-size="12"
+            :current-page="pageNo"
+            layout="prev, pager, next"
+            :total="total"
+          >
+          </el-pagination>
+        </div>
         </el-tab-pane>
+
+
         <el-tab-pane label="评论" name="second">
           <CommentSection type="songList" :id="this.$route.query.q" />
         </el-tab-pane>
@@ -84,11 +94,13 @@ export default {
       activeName: "first",
       // 歌单的详情数据
       playlist: {},
+      user: {},
       musiclists: [],
-      // 解决playlist.creator.avatarUrl/playlist.creator.nickname深层嵌套报错
       avatarUrl: "",
       nickname: "",
-      allmusic: "",
+      pageNo: 1,
+      pageSize: 12,
+      total: 0,
     };
   },
   computed: {
@@ -97,38 +109,20 @@ export default {
     },
   },
   methods: {
-    // 格式化日期
-    formatDate(now) {
-      let year = now.getFullYear(); //取得4位数的年份
-      let month = (now.getMonth() + 1).toString().padStart(2, "0"); //取得日期中的月份，其中0表示1月，11表示12月
-      let date = now.getDate().toString().padStart(2, "0"); //返回日期月份中的天数（1到31）
-      return year + "-" + month + "-" + date;
-    },
-    formatDateFully(now) {
-      let year = now.getFullYear(); //取得4位数的年份
-      let month = (now.getMonth() + 1).toString().padStart(2, "0");
-      let date = now.getDate().toString().padStart(2, "0");
-      let hour = now.getHours().toString().padStart(2, "0");
-      let min = now.getMinutes().toString().padStart(2, "0");
-      let second = now.getSeconds().toString().padStart(2, "0");
-      return (
-        year + "-" + month + "-" + date + " " + hour + "-" + min + "-" + second
-      );
-    },
     playMusic(row) {
       let id = row.id;
       axios({
         url: `/song/detail/${id}`,
         method: "get",
       }).then((res) => {
-        console.log("音乐地址：",res.data.data.url);
+        console.log("音乐地址：", res.data.data.url);
         this.$parent.$data.musicinfo = row;
         this.$parent.$data.musicurl = res.data.data.url;
       });
       let musicitem = {
         id: row.id,
         name: row.name,
-        musicArtist: singerName,
+        musicArtist: row.singerName,
         duration: row.duration,
       };
       this.$store.commit("changeMusicInfo", musicitem);
@@ -157,34 +151,39 @@ export default {
     userDetail(userid) {
       this.$router.push(`/userdetail?q=${userid}`);
     },
+    handleCurrentChange(val) {
+      this.pageNo = val;
+      this.getsongs();
+    },
+    getsongs() {
+      axios({
+        //获取歌单歌曲列表
+        url: `/listSong/detail/${this.$route.query.q}/${this.pageNo}/${this.pageSize}`,
+        method: "get",
+      }).then((res) => {
+        this.allmusic = res.data.data.total;
+        this.musiclists = res.data.data.list;
+      });
+    },
+    getListDetail() {
+      //获取歌单详情
+      axios({
+        url: `/songList/detail/${this.$route.query.q}`,
+        method: "get",
+      }).then((res) => {
+        this.playlist = res.data.data;
+        axios({
+          url: `/user/detail/${this.playlist.userId}`,
+          method: "get",
+        }).then((res) => {
+          this.user = res.data.data;
+        });
+      });
+    },
   },
   created() {
-    //获取歌单详情
-    axios({
-      url: "/playlist/detail",
-      method: "get",
-      params: { id: this.$route.query.q },
-    }).then((res) => {
-      this.playlist = res.data.playlist;
-      this.avatarUrl = res.data.playlist.creator.avatarUrl;
-      this.nickname = res.data.playlist.creator.nickname;
-      this.playlist.createTime = this.formatDate(
-        new Date(this.playlist.createTime)
-      );
-      this.allmusic = res.data.playlist.trackIds.length;
-      this.musiclists = res.data.playlist.tracks;
-      for (let i = 0; i < this.musiclists.length; i++) {
-        let duration = this.musiclists[i].dt;
-        let min = parseInt(duration / 60000)
-          .toString()
-          .padStart(2, "0");
-        let second = parseInt((duration - min * 60000) / 1000)
-          .toString()
-          .padStart(2, "0");
-        duration = `${min}:${second}`;
-        this.musiclists[i].dt = duration;
-      }
-    });
+    this.getListDetail();
+    this.getsongs();
   },
 };
 </script>
@@ -339,5 +338,10 @@ ul {
 }
 .playlist-tabwrap {
   margin: 30px 30px 200px;
+}
+.page-list {
+  margin: 10px;
+  margin-bottom: 100px;
+  text-align: center;
 }
 </style>

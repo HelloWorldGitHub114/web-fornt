@@ -126,7 +126,7 @@ export default {
     });
     // 最新MV
     axios({
-      url: "/personalized/mv",
+      url: "/mv/personalized",
       method: "get",
       params: {
         limit: 8,
