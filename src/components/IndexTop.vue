@@ -81,11 +81,12 @@
       <RouterLink to="/register" class="register">注册</RouterLink>
     </div>
     <div style="display: flex; margin-left: auto" v-else>
-      <div class="login">{{ this.$store.state.username }}用户，你好</div>
-    </div>
-    <div style="" v-if="this.$store.state.userid != -1">
+      <div class="login">{{ this.$store.state.username }}，你好</div>
+      <div style="" v-if="this.$store.state.userid != -1">
       <div class="space" @click="userDetail()">个人空间</div>
     </div>
+    </div>
+    
   </div>
 </template>
   

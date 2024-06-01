@@ -110,6 +110,7 @@
                   window.localStorage.setItem("token",res.data.data.token)
                   window.localStorage.setItem("isLogin",true)
                   window.localStorage.setItem("user",JSON.stringify(res.data.data.user))
+                  this.$router.push({name:'home'})
                   
                 }else{
                   this.$message.error(res.meg)

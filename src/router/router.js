@@ -121,15 +121,17 @@ const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   if (
     // 检查用户是否已登录
-    store.state.userid != -1 &&
+    store.state.userid == -1 &&
     // // ❗️ 避免无限重定向
-    to.name == 'login'
+    (to.name != 'login') && (to.name != 'register')
   ) {
     next({
-      name:'home'
+      name:'login'
     })
   }else{
-    next()
+    next({
+      
+    })
   }
   
 })

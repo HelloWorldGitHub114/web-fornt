@@ -2,7 +2,15 @@
 <template>
   <div class="userdetail">
     <div class="user-wrap">
-      <h2>用户详情<router-link to='userupdate' style="font-weight:normal;font-size:medium">修改用户信息</router-link></h2>
+      <h2>
+        用户详情
+        <router-link
+          to="userupdate"
+          style="font-weight: normal; font-size: medium"
+          >修改用户信息</router-link
+        >
+        <el-button type="text" @click="open">登出</el-button>
+      </h2>
       <div class="user-info">
         <div class="user-info-head">
           <img class="userpicture" :src="user.avatar" alt="头像失效" />
@@ -170,6 +178,34 @@ export default {
         this.listData();
       }, 500);
       this.createVisible = false;
+    },
+    open() {
+      this.$confirm("确定要登出吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "登出成功!",
+          });
+          window.localStorage.removeItem("token");
+          window.localStorage.removeItem("isLogin");
+          window.localStorage.removeItem("user");
+          this.$router.push({name:'login'})
+          setTimeout(()=>{
+            this.$router.go(0)
+          },500)
+          
+          
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消登出",
+          });
+        });
     },
   },
   computed: {
