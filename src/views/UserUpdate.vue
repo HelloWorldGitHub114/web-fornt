@@ -32,7 +32,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="介绍">
-          <el-input type="textarea" v-model="form.desc"></el-input>
+          <el-input type="textarea" v-model="form.introduction"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">更新</el-button>
@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.form.id = this.$store.state.userid
+      this.form.id = this.$store.state.userid;
       // 过滤掉空值的字段
       const filteredForm = Object.keys(this.form)
         .filter(
@@ -79,18 +79,40 @@ export default {
           obj[key] = this.form[key];
           return obj;
         }, {});
-        console.log(filteredForm)
+      console.log(filteredForm);
 
       this.$http({
-        method:'post',
-        url:'/user/update',
-        data:filteredForm
+        method: "post",
+        url: "/user/update",
+        data: filteredForm,
       })
-        .then((res) => {
-          console.log(res.status)
+        .then(res => {
+          if (res.status == 200) {
+            this.$http({
+              method:'get',
+              url:`/user/detail/${this.$store.state.userid}`
+            }).then(res=>{
+              let user = res.data.data;
+            // alert(user.id)
+            this.$store.commit("changeUser", user);
+            this.$store.commit("changeUserid", user.id);
+            this.$store.commit("changeUsername", user.nickname);
+            window.localStorage.setItem(
+              "user",
+              JSON.stringify(user)
+            );
+            this.$message({
+            type: "success",
+            message: "修改成功!",
+          });
+            this.$router.push({ name: "home" });
+            }).catch(err=>{
+              console.log(err)
+            })
+          }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(err => {
+          console.log(err);
         });
     },
   },

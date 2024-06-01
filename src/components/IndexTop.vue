@@ -163,7 +163,7 @@ export default {
       let user = JSON.parse(window.localStorage.getItem("user"));
       this.$store.commit("changeUserid", user.id);
       this.$store.commit("changeUsername", user.nickname);
-      console.log(this.$store.state.userid)
+      // console.log(this.$store.state.userid)
     }
   },
 };
