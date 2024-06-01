@@ -1,7 +1,7 @@
 <!-- OK -->
 <template>
   <div class="playlists">
-    <div class="top-card-wrap">
+    <div class="top-card-wrap" v-if="topList">
       <!-- 封面 -->
       <img :src="topList.pic" alt="" class="bg-blur" />
       <div class="top-card">
@@ -28,7 +28,7 @@
           </li>
         </ul>
       </div>
-      <div class="tab-content">
+      <div v-if="list.length!=0" class="tab-content">
         <div class="songs-wrap">
           <div class="list">
             <ul>
@@ -46,6 +46,8 @@
           </div>
         </div>
       </div>
+      <div v-else>这里没有歌单内容</div>
+
       <div class="page-list">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -75,9 +77,8 @@ export default {
       topList: {},
       // 歌单列表
       list: [],
-      tabActive: "全部",
+      tabActive: "欧美",
       tabItems: [
-        "全部",
         "欧美",
         "华语",
         "流行",

@@ -135,13 +135,14 @@ export default {
     },
     playAllMusic() {
       let allSongs = this.musiclists;
+      console.log(allSongs);
       for (const item of allSongs) {
         let musicitem = {
           id: item.id,
           name: item.name,
           musicArtist: item.singerName,
           duration: item.duration,
-          picUrl: item.al.pic,
+          picUrl: item.pic,
         };
         this.$store.commit("changeMusicQueue", musicitem);
       }

@@ -124,9 +124,7 @@ export default {
   name: "NewMvs",
   data() {
     return {
-      area: "ALL",
-      type: "ALL",
-      order: "FAST",
+      order: "NEW",
       mvLists: [],
       page: 1,
       total: 0,
@@ -141,12 +139,12 @@ export default {
         url: "/mv/all",
         method: "get",
         params: {
-          pagesize: 12,
-          pageno: this.page,
+          pageSize: 12,
+          pageNo: this.page,
           order: this.order,
         },
       }).then((res) => {
-        this.mvLists = res.data.data.Mvs;
+        this.mvLists = res.data.data.list;
         if (res.data.data.count) {
           this.total = res.data.data.count;
         }

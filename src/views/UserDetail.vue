@@ -1,11 +1,11 @@
-﻿<!-- OK -->
+﻿<!-- FIN. -->
 <template>
   <div class="userdetail">
     <div class="user-wrap">
       <h2>用户详情</h2>
       <div class="user-info">
         <div class="user-info-head">
-          <img class="userpicture" :src="user.avatar" alt="" />
+          <img class="userpicture" :src="user.avatar" alt="头像失效" />
           <div class="user-name">{{ user.nickname }}</div>
         </div>
         <div class="user-other">
@@ -23,8 +23,9 @@
             <ul>
               <li class="newsonglist">
                 <img
-                  @click="createNewList()"
-                  src="https://img2.baidu.com/it/u=1207583718,1175161658&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"
+                  class="newSonglistpic"
+                  @click="createVisible = true"
+                  src="https://img.icons8.com/nolan/1600/add-list.png"
                   alt=""
                 />
                 <p>创建新歌单</p>
@@ -36,7 +37,7 @@
                 @click="playListDetail(item.id)"
               >
                 <p class="first-p">风格：{{ item.style }}</p>
-                <img :src="item.pic" alt="" />
+                <img class="newSonglistpic" :src="item.pic" alt="" />
                 <p class="last-p">{{ item.title }}</p>
               </li>
             </ul>
@@ -44,46 +45,40 @@
         </div>
       </div>
 
-      <!-- <div class="page-list">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :page-size="10"
-          :current-page="page"
-          layout="prev, pager, next"
-          :total="total"
-        >
-        </el-pagination>
-      </div> -->
-
-      <!-- <h2>TA收藏的歌单</h2>
-      <div class="list-content">
-        <div class="songs-wrap">
-          <div class="list">
-            <ul>
-              <li
-                class="iconfont icon-play"
-                v-for="(item, index) in listlike"
-                :key="index"
-                @click="playListDetail(item.id)"
+      <el-dialog
+        title="创建歌单"
+        :visible.sync="createVisible"
+        width="50%"
+        :modal-append-to-body="false"
+        @close="handleClose"
+        :before-close="handleClose"
+      >
+        <!-- 防止遮罩层遮挡 -->
+        <el-form ref="newlist" :model="newlist" label-width="80px">
+          <el-form-item label="歌单名称">
+            <el-input v-model="newlist.title"></el-input>
+          </el-form-item>
+          <el-form-item label="歌单简介">
+            <el-input v-model="newlist.introduction"></el-input>
+          </el-form-item>
+          <el-form-item label="风格">
+            <el-select v-model="newlist.style" placeholder="请选择歌单风格">
+              <el-option
+                v-for="style in style"
+                :key="style"
+                :label="style"
+                :value="style"
               >
-                <p class="first-p">播放量：{{ item.playCount }}</p>
-                <img :src="item.coverImgUrl" alt="" />
-                <p class="last-p">{{ item.name }}</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="page-list">
-        <el-pagination
-          @current-change="handleCurrentChangeLike"
-          :page-size="10"
-          :current-page="pagelike"
-          layout="prev, pager, next"
-          :total="totallike"
-        >
-        </el-pagination>
-      </div> -->
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="handleClose">取 消</el-button>
+          <el-button type="primary" @click="onsubmit()">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -95,15 +90,28 @@ export default {
   data() {
     return {
       list: [],
-      // 创建歌单总条数
-      // total: 0,
-      // 创建页码
-      // page: 1,
-      // 创建歌单列表
-      // totallike: 0,
-      // pagelike: 1,
-      // listlike: [],
+      style: [
+        "欧美",
+        "华语",
+        "流行",
+        "说唱",
+        "摇滚",
+        "民谣",
+        "电子",
+        "轻音乐",
+        "影视原声",
+        "ACG",
+        "怀旧",
+      ],
       user: {},
+      createVisible: false,
+      newlist: {
+        introduction: "",
+        style: "",
+        title: "",
+        pic: "https://s21.ax1x.com/2024/06/01/pkGCCyq.jpg",
+        //默认歌单图片
+      },
     };
   },
   created() {
@@ -125,15 +133,6 @@ export default {
       }).then((res) => {
         this.list = res.data.data;
       });
-      //获取用户收藏的歌单
-      // axios({
-      //   url: "/top/playlist",
-      //   // url: `/songList/detail-userId/${this.$route.query.q}`
-      //   method: "get",
-      // }).then((res) => {
-      //   this.listlike = res.data.playlists;
-      //   this.totallike = res.data.total;
-      // });
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -145,6 +144,32 @@ export default {
     },
     playListDetail(id) {
       this.$router.push(`/playlistdetail?q=${id}`);
+    },
+    handleClose() {
+      this.createVisible = false;
+      this.newlist = {};
+    },
+    onsubmit() {
+      axios({
+        url: "/songList/add",
+        method: "post",
+        data: {
+          pic: this.newlist.pic,
+          style: this.newlist.style,
+          title: this.newlist.title,
+          introduction: this.newlist.introduction,
+          userId: this.LoginUserId,
+        },
+      }).then((res) => {
+        this.$message({
+          message: res.data.msg,
+          type: "info",
+        });
+      });
+      setTimeout(() => {
+        this.listData();
+      }, 500);
+      this.createVisible = false;
     },
   },
   computed: {
@@ -202,36 +227,41 @@ ul {
   margin-bottom: 20px;
 }
 .user-wrap {
-  width: 800px;
+  width: 100%;
   margin: 10px 30px;
   margin-bottom: 150px;
 }
 .list-content {
   margin-top: 20px;
 }
-
 .songs-wrap .list ul {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
-
-.songsli {
-  width: 18%;
-  margin: 10px 0;
-  position: relative;
-  overflow-y: hidden;
-}
-
 .newsonglist {
   cursor: pointer;
-  width: 18%;
+  width: 150px;
+  height: 190px;
   margin: 10px 0;
   position: relative;
   overflow-y: hidden;
+  margin-right: 40px;
+  margin-bottom: 25px;
 }
-
+.newSonglistpic {
+  width: 150px;
+  height: 150px;
+}
+.songsli {
+  width: 150px;
+  height: 190px;
+  margin: 10px 0;
+  position: relative;
+  overflow-y: hidden;
+  margin-right: 40px;
+  margin-bottom: 25px;
+}
 .songsli .first-p {
   position: absolute;
   top: 0;
@@ -245,7 +275,6 @@ ul {
   transform: translateY(-100%);
   transition: 0.5s;
 }
-
 .songsli::before {
   content: "\ea42";
   position: absolute;
@@ -264,21 +293,18 @@ ul {
   transition: 0.3s;
   cursor: pointer;
 }
-
 .songsli:hover .first-p {
   transform: translateY(0);
 }
-
 .songsli:hover::before {
   opacity: 1;
 }
-
 .songs-wrap ul img {
   width: 100%;
   border-radius: 5px;
 }
-
 .songs-wrap ul .last-p {
+  line-height: 20px;
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -1,4 +1,4 @@
-﻿<!-- OK -->
+﻿<!-- FIN. -->
 <template>
   <div class="musicprocess">
     <audio
@@ -28,11 +28,7 @@
           ▶️
         </span>
         <!-- 暂停 -->
-        <span
-          class="iconfont"
-          v-if="isPaused"
-          @click="changeStatus('pasuing')"
-        >
+        <span class="iconfont" v-if="isPaused" @click="changeStatus('pasuing')">
           ⏸️
         </span>
         <!-- 下一首 -->
@@ -84,11 +80,41 @@
         <span class="iconfont">⏏️</span>
         <MusicQueue class="musicqueue"></MusicQueue>
       </div>
+      <!-- 收藏 -->
+      <div class="like">
+        <span class="iconfont" @click="readyLike()">❤️</span>
+      </div>
     </div>
+
+    <el-dialog
+      title="收藏到歌单"
+      :visible.sync="likeVisible"
+      :modal-append-to-body="false"
+      @close="handleClose"
+      :before-close="handleClose"
+      width="30%"
+    >
+      <el-form label-width="80px">
+        <el-select v-model="songListId" placeholder="想要收藏到哪个歌单？">
+          <el-option
+            v-for="(item, index) in userSongList"
+            :key="index"
+            :label="item.title"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="likeSubmit()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
   <script>
 import MusicQueue from "./MusicQueue.vue";
+import axios from "axios";
 export default {
   name: "MusicProcess",
   components: { MusicQueue },
@@ -107,6 +133,9 @@ export default {
       cacheVoice: 0.7,
       isSeeking: false, // 是否正在拖动滑块
       musicimg: require("../assets/imgs/defualt.png"),
+      likeVisible: false,
+      songListId: null,
+      userSongList: [],
     };
   },
   methods: {
@@ -219,7 +248,46 @@ export default {
       return this.$options.filters.timeFormat(value);
     },
     musicDetail(id) {
-      if(id) this.$router.push(`/musicdetail?q=${id}`);
+      if (id) this.$router.push(`/musicdetail?q=${id}`);
+    },
+    readyLike() {
+      if (this.$store.state.userid == -1) {
+        alert("请先登陆");
+      } else {
+        //查找用户的所有歌单
+        axios({
+          url: `/songList/detail-userId/${this.$store.state.userid}`,
+          method: "get",
+        }).then((res) => {
+          this.userSongList = res.data.data;
+        });
+        this.likeVisible = true;
+      }
+    },
+    likeSubmit() {
+      if (!this.songListId || !this.globalMusicInfo.id) {
+        alert("没有歌曲正在播放！");
+      } else {
+        axios({
+          url: `/listSong/add`,
+          method: "post",
+          data: {
+            songId: this.globalMusicInfo.id,
+            songListId: this.songListId,
+          },
+        }).then((res) => {
+          this.$message({
+            message: res.data.msg,
+            type: "info",
+          });
+        });
+        this.likeVisible = false;
+        this.songListId = null;
+      }
+    },
+    handleClose() {
+      this.likeVisible = false;
+      this.songListId = null;
     },
   },
   computed: {
@@ -279,7 +347,7 @@ export default {
     musicinfo() {
       if (this.musicinfo.pic != undefined) {
         this.musicimg = this.musicinfo.pic;
-      } 
+      }
     },
   },
 };
@@ -308,6 +376,7 @@ export default {
 }
 .bar-albumImg {
   position: absolute;
+  cursor: pointer;
   width: 60px;
   height: 60px;
   left: 100px;
@@ -362,7 +431,7 @@ export default {
 }
 .audio-right {
   position: absolute;
-  width: 150px;
+  width: 300px;
   height: 40px;
   margin-left: 1120px;
 }
@@ -393,6 +462,13 @@ export default {
   fill: palevioletred;
 }
 .mode-music-list {
+  width: 40px;
+  height: 80px;
+  margin: -40px 100px;
+  line-height: 130px;
+  float: right;
+}
+.like {
   width: 40px;
   height: 80px;
   margin: -40px auto;

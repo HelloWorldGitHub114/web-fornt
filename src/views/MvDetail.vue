@@ -4,7 +4,7 @@
     <div class="mvright-wrap">
       <h2>MV详情</h2>
       <div class="mvplay-wrap">
-        <video :src="mvUrl" controls autoplay></video>
+        <video :src="mvinfos.url" controls autoplay></video>
       </div>
       <div class="mv-info">
         <div class="mv-info-head">
@@ -16,7 +16,7 @@
           <div class="mv-time">发布时间：{{ mvinfos.publishTime }}</div>
           <div class="mv-playcount">播放：{{ mvinfos.playCount }}次</div>
         </div>
-        <p class="mv-desc">{{ mvinfos.desc }}</p>
+        <p class="mv-desc">{{ mvinfos.introduction }}</p>
       </div>
       <CommentSection type="MV" :id="this.$route.query.q" />
     </div>
@@ -58,21 +58,13 @@ export default {
     };
   },
   created() {
-    //MV播放地址
-    axios({
-      url: "/mv/url",
-      method: "get",
-      params: { id: this.$route.query.q },
-    }).then((res) => {
-      this.mvUrl = res.data.data.url;
-    });
     //MV相关推荐
     axios({
       url: "/mv/simi",
       method: "get",
       params: { mvid: this.$route.query.q },
     }).then((res) => {
-      this.simiMvs = res.data.data.mvs;
+      this.simiMvs = res.data.data;
     });
     //MV信息
     axios({

@@ -1,21 +1,6 @@
-﻿<!-- finished -->
+﻿<!-- FIN -->
 <template>
   <div class="discover">
-    <!-- 轮播图 -->
-    <div class="Carousel">
-      <el-carousel :interval="4000" type="card" height="250px">
-        <el-carousel-item v-for="(item, index) in banners" :key="index">
-          <img
-            :src="item.imageUrl"
-            alt="banner"
-            width="100%"
-            height="100%"
-            class="iitem-mg"
-          />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-
     <!-- 推荐歌单 -->
     <div class="songs-warp">
       <h3>推荐歌单</h3>
@@ -28,7 +13,7 @@
             @click="playListDetail(item.id)"
           >
             <p class="first-p">{{ item.userId }}</p>
-            <img :src="item.pic" alt="recommd" />
+            <img :src="item.pic" alt="recommd" class="songListPic"/>
             <p class="last-p" :title="item.title">{{ item.title }}</p>
           </li>
         </ul>
@@ -66,13 +51,13 @@
           @click="toMvdetail(item.id)"
         >
           <div class="mv-img-warp">
-            <img alt="newMvs" :src="item.picUrl" />
+            <img class="mvPic" alt="newMvs" :src="item.cover" />
             <p class="iconfont icon-play play"></p>
             <p class="play-count iconfont icon-play">{{ item.playCount }}</p>
           </div>
           <div class="mv-info">
             <p class="title">{{ item.name }}</p>
-            <p class="author">{{ item.artists[0].name }}</p>
+            <p class="author">{{ item.artistName }}</p>
           </div>
         </li>
       </ul>
@@ -86,8 +71,6 @@ export default {
   name: "FindMusic",
   data() {
     return {
-      // 轮播图
-      banners: [],
       // 推荐歌单
       musiclists: [],
       // 最新音乐
@@ -102,17 +85,9 @@ export default {
     },
   },
   created() {
-    // 轮播图
-    // axios({
-    //   url: "/banner",
-    //   method: "get",
-    //   params: {},
-    // }).then((res) => {
-    //   this.banners = res.data.data.banners;
-    // });
     // 推荐歌单
     axios({
-      url: `/songList/getRandomSongList/${1}`,
+      url: `/songList/getRandomSongList/${4}`,
       method: "get",
     }).then((res) => {
       this.musiclists = res.data.data;
@@ -129,10 +104,10 @@ export default {
       url: "/mv/personalized",
       method: "get",
       params: {
-        limit: 8,
+        limit: 4,
       },
     }).then((res) => {
-      this.newsmv = res.data.data.result;
+      this.newsmv = res.data.data;
     });
   },
   methods: {
@@ -141,9 +116,9 @@ export default {
       let id = item.id;
       axios({
         url: `/song/detail/${id}`,
-        method: "get"
+        method: "get",
       }).then((res) => {
-        console.log("音乐地址：",res.data.data.url);
+        console.log("音乐地址：", res.data.data.url);
         this.$parent.$data.musicinfo = item;
         this.$parent.$data.musicurl = res.data.data.url;
       });
@@ -204,14 +179,20 @@ export default {
   list-style: none;
   width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 .list ul li {
-  width: 18%;
-  margin: 10px 0;
+  width: 140px;
+  height: 180px;
+  margin-right: 50px;
   position: relative;
   overflow-y: hidden;
+}
+.songListPic
+{
+  width: 140px;
+  height: 140px;
+  cursor: pointer;
 }
 
 .list li .first-p {
@@ -230,25 +211,6 @@ export default {
   box-sizing: border-box;
   transform: translateY(-100%);
   transition: 0.5s;
-}
-
-.list li::before {
-  content: "";
-  position: absolute;
-  bottom: 25px;
-  right: 5px;
-  width: 35px;
-  height: 35px;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 35px;
-  color: #d87093;
-  opacity: 0;
-  transition: 0.3s;
-  cursor: pointer;
 }
 
 .list li:hover .first-p {
@@ -270,6 +232,7 @@ ul img {
 ul .last-p {
   cursor: pointer;
   font-size: 14px;
+  line-height: 40px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -309,16 +272,16 @@ ul .last-p:hover {
 
 .new-songs .music-img-warp {
   position: relative;
-  width: 100px; /* 固定宽度 */
-  height: 100px; /* 固定高度 */
+  width: 100px;
+  height: 100px;
   cursor: pointer;
-  overflow: hidden; /* 确保图片不会超出容器边界 */
+  overflow: hidden;
 }
 
 .new-songs .music-img-warp img {
-  width: 100%; /* 图片宽度自适应容器 */
-  height: 100%; /* 图片高度自适应容器 */
-  object-fit: cover; /* 使图片覆盖整个容器 */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .new-songs .music-img-warp:hover p::before {
@@ -359,6 +322,7 @@ ul .last-p:hover {
   font-size: 12px;
 }
 /* 最新MV */
+
 .mv-list {
   display: flex;
   justify-content: flex-start;
@@ -367,13 +331,21 @@ ul .last-p:hover {
 }
 
 .mv-list li {
-  width: 23%;
+  width: 150px;
+  height: 150px;
   padding: 0 10px;
+  margin-right: 40px;
 }
 
 .mv-img-warp {
   position: relative;
   cursor: pointer;
+}
+
+.mvPic
+{
+  width: 150px;
+  height: 150px;
 }
 
 .mv-img-warp:hover .play::before {

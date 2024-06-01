@@ -47,7 +47,7 @@
     <el-pagination
       class="page-list"
       @current-change="handleCurrentChange"
-      :page-size="20"
+      :page-size="pageSize"
       :current-page="page"
       layout="prev, pager, next"
       :total="total"
@@ -74,6 +74,7 @@ export default {
     return {
       total: 0,
       page: 1,
+      pageSize: 15,
       Comments: [],
       newComment: "",
     };
@@ -94,7 +95,6 @@ export default {
           message: "请先登陆再发表评论",
         });
       } else {
-        let createTime = new Date().toISOString();
         if (this.type == "music") {
           axios({
             url: `/comment/add`,
@@ -176,18 +176,31 @@ export default {
       //需要根据type的类型获取评论
       let axiosurl = "";
       if (this.type == "music") {
-        axiosurl = `/comment/detail-songId/${this.id}/${this.page}/${20}`;
+        axiosurl = `/comment/detail-songId/${this.id}/${this.page}/${this.pageSize}`;
       } else if (this.type == "MV") {
-        axiosurl = `/comment/detail-mvId/${this.id}/${this.page}/${20}`;
+        axiosurl = `/comment/detail-mvId/${this.id}/${this.page}/${this.pageSize}`;
       } else if (this.type == "songList") {
-        axiosurl = `/comment/detail-songListId/${this.id}/${this.page}/${20}`;
+        axiosurl = `/comment/detail-songListId/${this.id}/${this.page}/${this.pageSize}`;
       }
       axios({
         url: axiosurl,
         method: "get",
       }).then((res) => {
         this.Comments = res.data.data;
-        this.total = this.Comments.length;
+      });
+      let totalurl= "";
+      if (this.type == "music") {
+        totalurl = `/comment/count-songId/${this.id}`;
+      } else if (this.type == "MV") {
+        totalurl = `/comment/count-mvId/${this.id}`;
+      } else if (this.type == "songList") {
+        totalurl = `/comment/count-songListId/${this.id}`;
+      }
+      axios({
+        url: totalurl,
+        method: "get",
+      }).then((res) => {
+        this.total = res.data.data;
       });
     },
   },
