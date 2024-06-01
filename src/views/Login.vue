@@ -109,7 +109,7 @@
                   this.$store.commit("changeUsername",user.nickname)
                   window.localStorage.setItem("token",res.data.data.token)
                   window.localStorage.setItem("isLogin",true)
-                  window.localStorage.setItem("user",JSON.stringify(res.data.data))
+                  window.localStorage.setItem("user",JSON.stringify(res.data.data.user))
                   
                 }else{
                   this.$message.error(res.meg)

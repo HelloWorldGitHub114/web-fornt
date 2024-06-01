@@ -160,8 +160,9 @@ export default {
   mounted() {
     if (window.localStorage.getItem("isLogin") === "true") {
       let user = JSON.parse(window.localStorage.getItem("user"));
-      this.$store.commit("changeUserid", user.user.id);
-      this.$store.commit("changeUsername", user.user.nickname);
+      this.$store.commit("changeUserid", user.id);
+      this.$store.commit("changeUsername", user.nickname);
+      console.log(this.$store.state.username)
     }
   },
 };

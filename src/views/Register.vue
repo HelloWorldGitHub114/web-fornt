@@ -1,6 +1,9 @@
 <template>
-  <div style="display:flex;align-items: center;justify-content: center;height: 300px;">
+  <div style="display:flex;align-items: center;justify-content: center;height: 300px;margin: 40px auto">
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="昵称" prop="nickname">
+      <el-input v-model="ruleForm.nickname"></el-input>
+    </el-form-item>
       <el-form-item label="账号" prop="username">
       <el-input v-model.number="ruleForm.username"></el-input>
     </el-form-item>
@@ -52,11 +55,18 @@
           callback();
         }
       };
+      var checknickname = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('昵称不能为空'));
+        }
+        callback();
+      };
       return {
         ruleForm: {
           pass: '',
           checkPass: '',
-          username: ''
+          username: '',
+          nickname:''
         },
         rules: {
           pass: [
@@ -67,6 +77,9 @@
           ],
           username: [
             { validator: checkusername, trigger: 'blur' }
+          ],
+          nickname: [
+            { validator: checknickname, trigger: 'blur' }
           ]
         }
       };
@@ -75,9 +88,61 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            axios({
-              
-            })
+            this.$http({
+                method:'post',
+                url:'user/register',
+                data:{
+                  username:this.ruleForm.username,
+                  password:this.ruleForm.pass,
+                  nickname:this.ruleForm.nickname
+                }
+              }).then(res =>{
+                // console.log(res)
+                if(res.status === 200){
+                  // console.log(res)
+                  this.$router.push('/')
+                  this.$message.success("注册成功")
+                  this.$http({
+                    method:'post',
+                    url:'user/login',
+                    params:{
+                      username:this.ruleForm.username,
+                      password:this.ruleForm.pass,
+                    }
+                  }).then(res=>{
+                    if(res.status === 200){
+                    console.log(res)
+                    this.$router.push('/')
+                    this.$message.success("登录成功")
+                    let user = res.data.data.user
+                    this.$store.commit("changeUser",user)
+                    this.$store.commit("changeUserid",user.id)
+                    this.$store.commit("changeUsername",user.nickname)
+                    window.localStorage.setItem("token",res.data.data.token)
+                    window.localStorage.setItem("isLogin",true)
+                    window.localStorage.setItem("user",JSON.stringify(res.data.data.user))
+                    
+                  }else{
+                    this.$message.error(res.meg)
+                  }
+                  }).catch(err=>{
+
+                  })
+                  // let user = res.data.data.user
+                  // this.$store.commit("changeUser",user)
+                  // this.$store.commit("changeUserid",user.id)
+                  // this.$store.commit("changeUsername",user.nickname)
+                  // window.localStorage.setItem("token",res.data.data.token)
+                  // window.localStorage.setItem("isLogin",true)
+                  // window.localStorage.setItem("user",JSON.stringify(res.data.data))
+                  
+                }else{
+                  this.$message.error(res.meg)
+                }
+                
+              }).catch(err =>{
+                console.log(err)
+              })
           } else {
             console.log('error submit!!');
             return false;
