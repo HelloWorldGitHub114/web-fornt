@@ -158,12 +158,12 @@ export default {
       this.$router.push(`/userdetail?q=${this.$store.state.userid}`);
     },
   },
-  mounted() {
+  created() {
     if (window.localStorage.getItem("isLogin") === "true") {
       let user = JSON.parse(window.localStorage.getItem("user"));
       this.$store.commit("changeUserid", user.id);
       this.$store.commit("changeUsername", user.nickname);
-      console.log(this.$store.state.username)
+      console.log(this.$store.state.userid)
     }
   },
 };

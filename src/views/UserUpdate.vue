@@ -66,6 +66,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.form.id = this.$store.state.userid
       // 过滤掉空值的字段
       const filteredForm = Object.keys(this.form)
         .filter(
@@ -79,9 +80,18 @@ export default {
           return obj;
         }, {});
         console.log(filteredForm)
-      // this.$http({})
-      //   .then((res) => {})
-      //   .catch((err) => {});
+
+      this.$http({
+        method:'post',
+        url:'/user/update',
+        data:filteredForm
+      })
+        .then((res) => {
+          console.log(res.status)
+        })
+        .catch((err) => {
+          console.log(err)
+        });
     },
   },
 };

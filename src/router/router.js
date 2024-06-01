@@ -28,7 +28,7 @@ import { name } from 'pubsub-js';
 // 配置地址和组件对应关系
 const routes = [
   {
-    name:'home',
+    name: 'home',
     // 地址
     path: "/",
     // 组件
@@ -88,24 +88,24 @@ const routes = [
     meta: {
       keepAlive: true
     }
-  },{
-    name:'login',
+  }, {
+    name: 'login',
     path: "/login",
     component: login,
 
-  },{
-    name:'register',
+  }, {
+    name: 'register',
     path: "/register",
     component: register,
 
   },
   {
-    name:'userupdate',
+    name: 'userupdate',
     path: "/userupdate",
     component: userUpdate,
 
   },
-  
+
 ];
 
 // if (window.localStorage.getItem('token')) {
@@ -118,21 +118,20 @@ const router = new VueRouter({
   routes,
 })
 
+//导航守卫，未登录时只允许登录和注册
 router.beforeEach(async (to, from, next) => {
   if (
     // 检查用户是否已登录
-    store.state.userid == -1 &&
+    window.localStorage.getItem('isLogin') != 'true' &&
     // // ❗️ 避免无限重定向
-    (to.name != 'login') && (to.name != 'register')
+    to.name != 'login' && to.name != 'register'
   ) {
     next({
-      name:'login'
+      name: 'login'
     })
-  }else{
-    next({
-      
-    })
+  } else {
+    next()
   }
-  
+
 })
 export default router
