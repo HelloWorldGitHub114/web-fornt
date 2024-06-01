@@ -2,7 +2,7 @@
 <template>
   <div class="userdetail">
     <div class="user-wrap">
-      <h2>用户详情</h2>
+      <h2>用户详情<router-link to='userupdate' style="font-weight:normal;font-size:medium">修改用户信息</router-link></h2>
       <div class="user-info">
         <div class="user-info-head">
           <img class="userpicture" :src="user.avatar" alt="头像失效" />
