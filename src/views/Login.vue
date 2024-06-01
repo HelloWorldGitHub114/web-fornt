@@ -91,9 +91,9 @@
               // console.log(this.ruleForm.username)
               // console.log(this.ruleForm.pass)
               this.$http({
-                method:'get',
+                method:'post',
                 url:'user/login',
-                data:{
+                params:{
                   username:this.ruleForm.username,
                   password:this.ruleForm.pass
                 }
@@ -103,11 +103,13 @@
                   console.log(res)
                   this.$router.push('/')
                   this.$message.success("登录成功")
-                  this.$store.commit("changeUserid",res.data.data.id)
-                  this.$store.commit("changeUsername",res.data.data.nickname)
-                  window.localStorage.setItem("token",res.data.token)
+                  let user = res.data.data.user
+                  this.$store.commit("changeUser",user)
+                  this.$store.commit("changeUserid",user.id)
+                  this.$store.commit("changeUsername",user.nickname)
+                  window.localStorage.setItem("token",res.data.data.token)
                   window.localStorage.setItem("isLogin",true)
-                  window.localStorage.setItem("user",JSON.stringify(res.data))
+                  window.localStorage.setItem("user",JSON.stringify(res.data.data))
                   
                 }else{
                   this.$message.error(res.meg)

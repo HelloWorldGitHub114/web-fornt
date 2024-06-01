@@ -2,14 +2,14 @@ import Vue from 'vue'
 import axios from 'axios'
 
 
-axios.defaults.baseURL = 'https://mock.apifox.com/m1/4257489-3899055-default';
+axios.defaults.baseURL = 'http://192.168.3.59:8081';
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 axios.interceptors.request.use((config) => {
     // config 是 axios 配置对象
     // 获取token
     let token = window.localStorage.getItem('token');
     // 添加token
-    token && (config.headers.token = token)
+    token && (config.headers.Authorization = token)
     return config;
 }, (error) => {
     // 请求出错

@@ -37,6 +37,9 @@ const mutations = {
   },
   changeUsername(state,name){
     state.username = name;
+  },
+  changeUser(state,user){
+    state.user = user;
   }
 }
 const state = {
@@ -46,6 +49,7 @@ const state = {
   isLogin:false,
   userid:-1,
   username:'',
+  user:{}
 }
 export default new Vuex.Store({
   actions, mutations, state,
