@@ -46,7 +46,7 @@
                   @click="playListDetail(item.id)"
                 >
                   <p class="first-p">风格：{{ item.style }}</p>
-                  <img :src="item.pic" alt="recommend" />
+                  <img :src="item.pic" alt="recommend" class="songListPic"/>
                   <p class="last-p" :title="item.title">{{ item.title }}</p>
                 </li>
               </ul>
@@ -293,11 +293,19 @@ ul {
 }
 
 .songs-wrap .list li {
-  width: 15%;
+  width: 180px;
+  height: 220px;
   margin: 10px 0;
   margin-right: 60px;
+  margin-bottom: 60px;
   position: relative;
   overflow-y: hidden;
+}
+
+.songListPic
+{
+  width: 180px;
+  height: 180px;
 }
 
 .list li .first-p {
@@ -349,6 +357,7 @@ ul {
 .songs-wrap ul .last-p {
   font-size: 14px;
   overflow: hidden;
+  line-height: 20px;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 10px auto;

@@ -6,10 +6,10 @@
         用户详情
         <router-link
           to="userupdate"
-          style="font-weight: normal; font-size: medium"
-          >修改用户信息</router-link
+          style="font-weight: normal; font-size: 20"
+          ><i class="el-icon-edit">更改个人信息</i></router-link
         >
-        <el-button type="text" @click="open">登出</el-button>
+        <i class="el-icon-s-custom" @click="open" style="cursor: pointer; margin-left: 700px;">退出登陆</i>
       </h2>
       <div class="user-info">
         <div class="user-info-head">
@@ -193,12 +193,10 @@ export default {
           window.localStorage.removeItem("token");
           window.localStorage.removeItem("isLogin");
           window.localStorage.removeItem("user");
-          this.$router.push({name:'login'})
-          setTimeout(()=>{
-            this.$router.go(0)
-          },500)
-          
-          
+          this.$router.push({ name: "login" });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 500);
         })
         .catch(() => {
           this.$message({
@@ -314,7 +312,7 @@ ul {
 .songsli::before {
   content: "\ea42";
   position: absolute;
-  bottom: 25px;
+  bottom: 40px;
   right: 5px;
   width: 35px;
   height: 35px;

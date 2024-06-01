@@ -39,14 +39,14 @@
                 @click="playListDetail(item.id)"
               >
                 <p class="first-p">风格：{{ item.style }}</p>
-                <img :src="item.pic" alt="" />
+                <img :src="item.pic" alt="" class="songListPic"/>
                 <p class="last-p">{{ item.title }}</p>
               </li>
             </ul>
           </div>
         </div>
       </div>
-      <div v-else>这里没有歌单内容</div>
+      <div v-else class="noneTips">这个分类下暂时没有歌单内容</div>
 
       <div class="page-list">
         <el-pagination
@@ -148,7 +148,7 @@ ul {
 }
 .playlists {
   z-index: 12;
-  max-width: 1300px;
+  width: 1300px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -252,15 +252,28 @@ ul {
 .songs-wrap .list ul {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
 .songs-wrap .list li {
-  width: 18%;
-  margin: 10px 0;
+  width: 150px;
+  height: 190px;
+  margin-right: 40px;
+  margin-bottom: 40px;
   position: relative;
   overflow-y: hidden;
+}
+
+.songListPic{
+  width: 150px;
+  height: 150px;
+}
+
+.noneTips
+{
+  margin:auto;
+  font-size: 20px;
+  text-align: center;
 }
 
 .list li .first-p {
@@ -314,6 +327,7 @@ ul {
 
 .songs-wrap ul .last-p {
   font-size: 14px;
+  line-height: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
