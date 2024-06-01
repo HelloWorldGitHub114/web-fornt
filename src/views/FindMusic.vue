@@ -153,7 +153,7 @@ export default {
   z-index: 12;
   margin: 0 auto;
   padding: 20px;
-  max-width: 1300px;
+  max-width: 1600px;
 }
 .el-carousel--horizontal {
   overflow-x: hidden;

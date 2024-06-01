@@ -312,7 +312,7 @@ ul {
 .songsli::before {
   content: "\ea42";
   position: absolute;
-  bottom: 25px;
+  bottom: 40px;
   right: 5px;
   width: 35px;
   height: 35px;

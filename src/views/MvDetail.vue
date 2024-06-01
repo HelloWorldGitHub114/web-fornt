@@ -29,7 +29,7 @@
           @click="toMvdetail(item.id)"
         >
           <div class="mvlist-img">
-            <img :src="item.cover" alt="" />
+            <img :src="item.cover" alt=""/>
             <p class="iconfont icon-play"></p>
           </div>
           <div class="mvlist-info">
@@ -64,7 +64,7 @@ export default {
       method: "get",
       params: { mvid: this.$route.query.q },
     }).then((res) => {
-      this.simiMvs = res.data.data;
+      this.simiMvs = res.data.data.slice(0,4);
     });
     //MV信息
     axios({
@@ -208,7 +208,7 @@ ul {
 }
 .mvlist-img img {
   width: 150px;
-  height: 90px;
+  height: 150px;
   margin-right: 20px;
 }
 .mvlist-info {
