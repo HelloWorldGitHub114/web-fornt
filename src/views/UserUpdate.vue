@@ -79,7 +79,7 @@ export default {
           obj[key] = this.form[key];
           return obj;
         }, {});
-      console.log(filteredForm);
+      // console.log(filteredForm);
 
       this.$http({
         method: "post",
