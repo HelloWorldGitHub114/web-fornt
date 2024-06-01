@@ -36,7 +36,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">更新</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="goBack">取消</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -115,6 +115,14 @@ export default {
           console.log(err);
         });
     },
+    goBack() {
+      const from = this.$route.query.from;
+      if (from) {
+        this.$router.push(from);
+      } else {
+        this.$router.back();
+      }
+    }
   },
 };
 </script>

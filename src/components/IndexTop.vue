@@ -83,7 +83,7 @@
     <div style="display: flex; margin-left: auto" v-else>
       <div class="login">{{ this.$store.state.username }}，你好</div>
       <div style="" v-if="this.$store.state.userid != -1">
-      <div class="space" @click="userDetail()">个人空间</div>
+      <el-button type="primary" round class="space" @click="userDetail()">个人空间</el-button>
     </div>
     </div>
     
@@ -211,9 +211,10 @@ export default {
 }
 .space{
   color: palevioletred;
-  margin: 23px 10px 15px;
+  margin: 13px 10px 15px;
   font-size: 16px;
   cursor: pointer;
+  background-color: SkyBlue;
 }
 .register {
   color: palevioletred;

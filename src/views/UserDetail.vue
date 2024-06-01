@@ -2,18 +2,17 @@
 <template>
   <div class="userdetail">
     <div class="user-wrap">
-      <h1 class="title">
-        用户详情
-        <router-link to="userupdate" class="buttons"><el-button type="primary" round class="changeinfo"
-            size='mini'>修改用户信息
-          </el-button>
+      <h1 style="display: flex; align-items: center; justify-content: space-between;">
+      用户详情
+      <div v-if="this.user.id === LoginUserId" class="title" style="display: flex; align-items: center;">
+        <router-link :to="{ name: 'userupdate', query: { from: $route.fullPath } }" class="buttons" style="flex-grow: 10;">
+          <el-button type="primary" round class="changeinfo" size='mini'>修改用户信息</el-button>
         </router-link>
-        <div class="buttons">
-          <el-button type="primary" @click="open" round class="logout" size='mini'>登出
-          </el-button>
+        <div class="buttons" style="flex-grow: 1;">
+          <el-button type="primary" @click="open" round class="logout" size='mini'>登出</el-button>
         </div>
-
-      </h1>
+      </div>
+    </h1>
       <div class="user-info">
         <div class="user-info-head">
           <img class="userpicture" :src="user.avatar" alt="头像失效" />
@@ -369,12 +368,12 @@ ul {
 .logout {
   background-color: red;
   border-color: red;
-  
+
 }
 
 .buttons {
   font-weight: normal;
   font-size: medium;
-  align-self: center;
+  align-self: flex-end;
 }
 </style>
