@@ -2,15 +2,18 @@
 <template>
   <div class="userdetail">
     <div class="user-wrap">
-      <h2>
+      <h1 class="title">
         用户详情
-        <router-link
-          to="userupdate"
-          style="font-weight: normal; font-size: medium"
-          >修改用户信息</router-link
-        >
-        <el-button type="text" @click="open">登出</el-button>
-      </h2>
+        <router-link to="userupdate" class="buttons"><el-button type="primary" round class="changeinfo"
+            size='mini'>修改用户信息
+          </el-button>
+        </router-link>
+        <div class="buttons">
+          <el-button type="primary" @click="open" round class="logout" size='mini'>登出
+          </el-button>
+        </div>
+
+      </h1>
       <div class="user-info">
         <div class="user-info-head">
           <img class="userpicture" :src="user.avatar" alt="头像失效" />
@@ -30,20 +33,12 @@
           <div class="list">
             <ul>
               <li class="newsonglist">
-                <img
-                  class="newSonglistpic"
-                  @click="createVisible = true"
-                  src="https://img.icons8.com/nolan/1600/add-list.png"
-                  alt=""
-                />
+                <img class="newSonglistpic" @click="createVisible = true"
+                  src="https://img.icons8.com/nolan/1600/add-list.png" alt="" />
                 <p>创建新歌单</p>
               </li>
-              <li
-                class="iconfont icon-play songsli"
-                v-for="(item, index) in list"
-                :key="index"
-                @click="playListDetail(item.id)"
-              >
+              <li class="iconfont icon-play songsli" v-for="(item, index) in list" :key="index"
+                @click="playListDetail(item.id)">
                 <p class="first-p">风格：{{ item.style }}</p>
                 <img class="newSonglistpic" :src="item.pic" alt="" />
                 <p class="last-p">{{ item.title }}</p>
@@ -53,14 +48,8 @@
         </div>
       </div>
 
-      <el-dialog
-        title="创建歌单"
-        :visible.sync="createVisible"
-        width="50%"
-        :modal-append-to-body="false"
-        @close="handleClose"
-        :before-close="handleClose"
-      >
+      <el-dialog title="创建歌单" :visible.sync="createVisible" width="50%" :modal-append-to-body="false"
+        @close="handleClose" :before-close="handleClose">
         <!-- 防止遮罩层遮挡 -->
         <el-form ref="newlist" :model="newlist" label-width="80px">
           <el-form-item label="歌单名称">
@@ -71,12 +60,7 @@
           </el-form-item>
           <el-form-item label="风格">
             <el-select v-model="newlist.style" placeholder="请选择歌单风格">
-              <el-option
-                v-for="style in style"
-                :key="style"
-                :label="style"
-                :value="style"
-              >
+              <el-option v-for="style in style" :key="style" :label="style" :value="style">
               </el-option>
             </el-select>
           </el-form-item>
@@ -90,7 +74,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import axios from "axios";
 export default {
@@ -193,12 +177,10 @@ export default {
           window.localStorage.removeItem("token");
           window.localStorage.removeItem("isLogin");
           window.localStorage.removeItem("user");
-          this.$router.push({name:'login'})
-          setTimeout(()=>{
-            this.$router.go(0)
-          },500)
-          
-          
+          this.$router.push({ name: "login" });
+          setTimeout(() => {
+            this.$router.go(0);
+          }, 500);
         })
         .catch(() => {
           this.$message({
@@ -215,11 +197,12 @@ export default {
   },
 };
 </script>
-  
+
 <style scoped>
 ul {
   list-style: none;
 }
+
 .userdetail {
   display: flex;
   width: 1200px;
@@ -228,26 +211,31 @@ ul {
   box-shadow: 0 0 10px #0003;
   background-color: #fff;
 }
+
 .user-info {
   margin: 20px 0;
   align-items: center;
 }
+
 .user-info-head {
   display: flex;
   align-items: center;
   margin: 20px 0;
 }
+
 .user-info .user-info-head .userpicture {
   width: 150px;
   height: 150px;
   border-radius: 50%;
   margin-right: 10px;
 }
+
 .user-info .user-name {
   font-size: 20px;
   color: #000;
   font-weight: 700;
 }
+
 .user-info .user-other {
   display: flex;
   align-items: center;
@@ -255,26 +243,32 @@ ul {
   color: grey;
   margin: 20px 0;
 }
+
 .user-info .user-location {
   margin-right: 20px;
 }
+
 .user-info .user-desc {
   font-size: 14px;
   margin-bottom: 20px;
 }
+
 .user-wrap {
   width: 100%;
   margin: 10px 30px;
   margin-bottom: 150px;
 }
+
 .list-content {
   margin-top: 20px;
 }
+
 .songs-wrap .list ul {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
+
 .newsonglist {
   cursor: pointer;
   width: 150px;
@@ -285,10 +279,12 @@ ul {
   margin-right: 40px;
   margin-bottom: 25px;
 }
+
 .newSonglistpic {
   width: 150px;
   height: 150px;
 }
+
 .songsli {
   width: 150px;
   height: 190px;
@@ -298,6 +294,7 @@ ul {
   margin-right: 40px;
   margin-bottom: 25px;
 }
+
 .songsli .first-p {
   position: absolute;
   top: 0;
@@ -311,6 +308,7 @@ ul {
   transform: translateY(-100%);
   transition: 0.5s;
 }
+
 .songsli::before {
   content: "\ea42";
   position: absolute;
@@ -329,16 +327,20 @@ ul {
   transition: 0.3s;
   cursor: pointer;
 }
+
 .songsli:hover .first-p {
   transform: translateY(0);
 }
+
 .songsli:hover::before {
   opacity: 1;
 }
+
 .songs-wrap ul img {
   width: 100%;
   border-radius: 5px;
 }
+
 .songs-wrap ul .last-p {
   line-height: 20px;
   font-size: 14px;
@@ -347,9 +349,32 @@ ul {
   white-space: nowrap;
   margin: 5px 0;
 }
+
 .page-list {
   margin: 10px;
   margin-bottom: 100px;
   text-align: center;
+}
+
+.changeinfo {
+  background-color: skyblue;
+  border-color: skyblue;
+
+}
+
+.title {
+  display: flex;
+}
+
+.logout {
+  background-color: red;
+  border-color: red;
+  
+}
+
+.buttons {
+  font-weight: normal;
+  font-size: medium;
+  align-self: center;
 }
 </style>
