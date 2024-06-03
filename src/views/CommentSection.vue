@@ -94,6 +94,11 @@ export default {
           type: "error",
           message: "请先登陆再发表评论",
         });
+      } else if (!this.newComment) {
+        this.$message({
+          type: "error",
+          message: "请不要发表空评论",
+        });
       } else {
         if (this.type == "music") {
           axios({
@@ -169,7 +174,7 @@ export default {
         setTimeout(() => {
           this.topCommpent();
         }, 500);
-         //获取最新数据
+        //获取最新数据
       }
     },
     topCommpent() {
@@ -188,7 +193,7 @@ export default {
       }).then((res) => {
         this.Comments = res.data.data;
       });
-      let totalurl= "";
+      let totalurl = "";
       if (this.type == "music") {
         totalurl = `/comment/count-songId/${this.id}`;
       } else if (this.type == "MV") {
