@@ -128,6 +128,7 @@ export default {
         musicArtist: item.singerName,
         duration: item.duration,
         picUrl: item.pic,
+        lyric: item.lyric
       };
       this.$store.commit("changeMusicInfo", musicitem);
       this.$store.commit("changeMusicQueue", musicitem);

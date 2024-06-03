@@ -21,6 +21,7 @@ import mvdetail from '../views/MvDetail.vue'
 import musicdetail from '@/views/MusicDetail.vue';
 import userdetail from '@/views/UserDetail.vue'
 import userUpdate from '@/views/UserUpdate.vue'
+import lrc from '@/views/Lrc.vue'
 
 import login from '../views/Login.vue'
 import register from '../views/Register.vue'
@@ -103,6 +104,12 @@ const routes = [
     name: 'userupdate',
     path: "/userupdate",
     component: userUpdate,
+
+  },
+  {
+    name: 'lyrics',
+    path: "/lyrics",
+    component: lrc,
 
   },
 

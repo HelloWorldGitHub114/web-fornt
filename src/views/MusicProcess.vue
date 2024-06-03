@@ -12,6 +12,7 @@
       @timeupdate="updateTime"
     ></audio>
     <div class="audio-left">
+      <!-- <button @click="sendMessage">测试</button> -->
       <!-- 专辑封面 -->
       <div class="bar-albumImg">
         <img :src="musicimg" alt="" @click="musicDetail(musicinfo.id)" />
@@ -84,6 +85,10 @@
       <div class="like">
         <span class="iconfont" @click="readyLike()">❤️</span>
       </div>
+      <div class="lrc">
+        <el-button type="primary" plain @click="navigateToLyrics" style="background-color: LightSkyBlue;color: palevioletred;">{{ isLyricsPage ? '返回' : '歌词' }}</el-button>
+      </div>
+      
     </div>
 
     <el-dialog
@@ -115,6 +120,7 @@
   <script>
 import MusicQueue from "./MusicQueue.vue";
 import axios from "axios";
+import { EventBus } from '@/bus/LrcBus.js';
 export default {
   name: "MusicProcess",
   components: { MusicQueue },
@@ -136,6 +142,7 @@ export default {
       likeVisible: false,
       songListId: null,
       userSongList: [],
+      isLyricsPage: false,
     };
   },
   methods: {
@@ -147,11 +154,13 @@ export default {
       // 时间进度
       if (!this.isSeeking) {
         this.currentTime = event.target.currentTime;
+        this.sendTime(this.currentTime);
       }
     },
     onSliderChange(value) {
       this.isSeeking = false;
       this.$refs.audio.currentTime = value;
+      this.sendTime(value);
     },
     // 是否播放
     changeStatus(option) {
@@ -289,7 +298,26 @@ export default {
       this.likeVisible = false;
       this.songListId = null;
     },
+    sendMessage() {
+      EventBus.$emit('message', this.count);
+      this.count++;
+    },
+    sendTime(currentTime){
+      EventBus.$emit('currentTime', currentTime);
+    },
+    navigateToLyrics() {
+      if (this.isLyricsPage) {
+        this.$router.go(-1); // 返回之前的页面
+      } else {
+        this.$router.push('/lyrics');
+      }
+    },
   },
+  created(){
+        EventBus.$on('changeTime', (msg) => {
+          this.$refs.audio.currentTime = msg
+        });
+    },
   computed: {
     musicQueue() {
       return this.$store.state.musicQueue;
@@ -348,6 +376,9 @@ export default {
       if (this.musicinfo.pic != undefined) {
         this.musicimg = this.musicinfo.pic;
       }
+    },
+    '$route'(to) {
+      this.isLyricsPage = to.path === '/lyrics';
     },
   },
 };
@@ -472,6 +503,13 @@ export default {
   width: 40px;
   height: 80px;
   margin: -40px auto;
+  line-height: 130px;
+  float: right;
+}
+.lrc {
+  width: 40px;
+  height: 80px;
+  margin: -42px -100px;
   line-height: 130px;
   float: right;
 }
