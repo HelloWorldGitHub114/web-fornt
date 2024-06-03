@@ -66,7 +66,7 @@
           pass: '',
           checkPass: '',
           username: '',
-          nickname:''
+          nickname:'',
         },
         rules: {
           pass: [
@@ -94,7 +94,10 @@
                 data:{
                   username:this.ruleForm.username,
                   password:this.ruleForm.pass,
-                  nickname:this.ruleForm.nickname
+                  nickname:this.ruleForm.nickname,
+                  avatar:"https://s21.ax1x.com/2024/06/01/pkG9kPH.jpg",
+                  introduction:"暂时没有个性签名，设置一个吧",
+                  location:"还没有设置地区，设置一个吧"
                 }
               }).then(res =>{
                 // console.log(res)
