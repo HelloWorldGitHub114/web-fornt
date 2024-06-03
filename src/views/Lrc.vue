@@ -34,6 +34,9 @@ export default {
         if (lyric) { // 添加条件检查
             this.lyrics = lyric;
             this.parseLyrics();
+        }else{
+            this.lyrics = `[00:00.000]暂无歌词`;
+            this.parseLyrics();
         }
     }
 
