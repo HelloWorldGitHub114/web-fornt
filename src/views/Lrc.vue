@@ -6,7 +6,7 @@
                 :class="{ active: index === currentLineIndex }" @click="seekToLine(index)">
                 {{ line.text }}
             </div>
-            
+
         </div>
         <!-- <button @click="goBack">返回</button> -->
         <!-- <div class="top-fade"></div>
@@ -24,13 +24,19 @@ export default {
             currentLineIndex: 0,
             lineHeight: 32, // Assuming each line has a height of 32px
             musicinfo: {},
-            name:''
+            name: ''
         };
     },
     mounted() {
+        if (this.$store.state.globalMusicInfo !== null) {
         this.name = this.$store.state.globalMusicInfo.name;
-        this.lyrics = this.$store.state.globalMusicInfo.lyric;
-        this.parseLyrics();
+        const lyric = this.$store.state.globalMusicInfo.lyric;
+        if (lyric) { // 添加条件检查
+            this.lyrics = lyric;
+            this.parseLyrics();
+        }
+    }
+
     },
     methods: {
         parseLyrics() {

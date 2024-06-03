@@ -509,7 +509,7 @@ export default {
 .lrc {
   width: 40px;
   height: 80px;
-  margin: -42px -100px;
+  margin: -41px -100px;
   line-height: 130px;
   float: right;
 }
