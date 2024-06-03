@@ -28,7 +28,7 @@ export default {
         };
     },
     mounted() {
-        if (this.$store.state.globalMusicInfo !== null) {
+        if (this.$store.state.globalMusicInfo) {
         this.name = this.$store.state.globalMusicInfo.name;
         const lyric = this.$store.state.globalMusicInfo.lyric;
         if (lyric) { // 添加条件检查
