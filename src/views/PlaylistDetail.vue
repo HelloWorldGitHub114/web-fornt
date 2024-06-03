@@ -24,7 +24,7 @@
         <div class="playAllBtn" @click="playAllMusic()">
           <i class="iconfont icon-play-all"></i>播放全部
         </div>
-        <div class="loveBtn"><i class="iconfont icon-love-all"></i>收藏</div>
+        <!-- <div class="loveBtn"><i class="iconfont icon-love-all"></i>收藏</div> -->
         <div class="playlist-tags">
           <span>风格：</span>
           <span class="tags">{{ playlist.style }}</span>
